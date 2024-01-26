@@ -17,9 +17,9 @@ export class UserController {
         return new Promise((resolve, reject) => {
             this.transport
                 .login(userIdentity, securityToken)
-                .then((user) => {
-                this._user = user; // new User(user.id, userIdentity);
-                resolve(user);
+                .then((data) => {
+                this._user = data.user; // new User(user.id, userIdentity);
+                resolve(data);
             })
                 .catch((reasoon) => {
                 reject(reasoon);

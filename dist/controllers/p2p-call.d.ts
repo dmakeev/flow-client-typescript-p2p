@@ -2,6 +2,7 @@ import { P2PCall, type User } from '../models';
 export declare enum P2PCallEventType {
     SIGNALING_CONNECTED = "signaling_connected",
     PAIRED = "paired",
+    PAIRING_CANCELLED = "pairing_cancelled",
     INCOMING = "incoming",
     LOCAL_STREAM = "local_stream",
     REMOTE_STREAM = "remote_stream",

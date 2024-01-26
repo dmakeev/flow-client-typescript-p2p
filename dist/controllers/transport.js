@@ -19,6 +19,7 @@ export var SignalingEventType;
     SignalingEventType["CONNECTED"] = "connected";
     SignalingEventType["DISCONNECTED"] = "disconnected";
     SignalingEventType["PAIRED"] = "paired";
+    SignalingEventType["PAIRING_CANCELLED"] = "pairing_cancelled";
     SignalingEventType["INCOMING"] = "incoming";
     SignalingEventType["ACCEPTED"] = "accepted";
     SignalingEventType["HANGUP"] = "hangup";
@@ -58,7 +59,6 @@ export class TransportController {
             if (!!this.socket) {
                 this.disconnect();
             }
-            console.log(url);
             this.socket = io(url, { path: '/signal/socket.io', transports: ['websocket'] });
             this.socket.on('connect', () => {
                 this.logController.log('Signaling socket is connected');
@@ -80,6 +80,9 @@ export class TransportController {
             this.socket.on('/v1/pairing/matched', (data) => {
                 this.eventListeners.get(SignalingEventType.PAIRED)?.forEach((listener) => listener({ pair: data.pair }));
             });
+            this.socket.on('/v1/pairing/cancel', (data) => {
+                this.eventListeners.get(SignalingEventType.PAIRING_CANCELLED)?.forEach((listener) => listener({ pair: data.pair }));
+            });
             this.socket.on('/v1/p2p/incoming', (data) => {
                 this.eventListeners
                     .get(SignalingEventType.INCOMING)
@@ -91,7 +94,6 @@ export class TransportController {
                     ?.forEach((listener) => listener({ callId: data.callId, sdpAnswer: data.sdpAnswer }));
             });
             this.socket.on('/v1/p2p/hangup', (data) => {
-                console.log('11114', data);
                 this.eventListeners.get(SignalingEventType.HANGUP)?.forEach((listener) => listener({ callId: data.callId }));
             });
             ///v1/p2p/hangup
@@ -134,7 +136,7 @@ export class TransportController {
                 }
                 this.userId = data.user.id;
                 // TODO: Make a correct object mapping
-                resolve(data.user);
+                resolve({ user: data.user, iceServers: data.iceServers ?? [] });
             });
         });
     }

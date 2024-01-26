@@ -10,6 +10,7 @@ export var P2PCallEventType;
 (function (P2PCallEventType) {
     P2PCallEventType["SIGNALING_CONNECTED"] = "signaling_connected";
     P2PCallEventType["PAIRED"] = "paired";
+    P2PCallEventType["PAIRING_CANCELLED"] = "pairing_cancelled";
     P2PCallEventType["INCOMING"] = "incoming";
     P2PCallEventType["LOCAL_STREAM"] = "local_stream";
     P2PCallEventType["REMOTE_STREAM"] = "remote_stream";
@@ -42,6 +43,9 @@ export class P2PCallController {
         }
         this.transport.addEventListener(SignalingEventType.PAIRED, (data) => {
             this.eventListeners.get(P2PCallEventType.PAIRED)?.forEach((listener) => listener(data));
+        });
+        this.transport.addEventListener(SignalingEventType.PAIRING_CANCELLED, (data) => {
+            this.eventListeners.get(P2PCallEventType.PAIRING_CANCELLED)?.forEach((listener) => listener(data));
         });
         this.transport.addEventListener(SignalingEventType.INCOMING, (data) => {
             this.incomingCalls.set(data.call.id, data);
@@ -101,7 +105,17 @@ export class P2PCallController {
      * @returns {Promise<User>}
      */
     async login(userIdentity, securityToken) {
-        return this.userController.login(userIdentity, securityToken);
+        return new Promise((resolve, reject) => {
+            this.userController
+                .login(userIdentity, securityToken)
+                .then((data) => {
+                resolve(data.user);
+                this.webrtcController.setIceServers(data.iceServers);
+            })
+                .catch((error) => {
+                reject(error.message);
+            });
+        });
     }
     /**
      * Logout user
@@ -175,7 +189,6 @@ export class P2PCallController {
                 reject('You should authenticate first');
                 return;
             }
-            console.log('??????????????', this.incomingCalls);
             const incomingCall = this.incomingCalls.get(callId);
             if (!incomingCall) {
                 reject('Call was finished before accepting');
@@ -186,7 +199,6 @@ export class P2PCallController {
                 .accept(callId, sdpAnswer, audio, video)
                 .then((call) => {
                 this.call = new P2PCall(callId, call.caller, call.callee, P2PCallStatus.Starting);
-                console.log('!!!!!!!! I ACCEPTED IT< START THE CALL');
                 this.incomingCalls.delete(callId);
                 resolve(this.call);
             })

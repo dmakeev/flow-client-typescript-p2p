@@ -6,6 +6,7 @@ export declare enum WebRTCEventType {
 export type WebRTCEvent = (data?: any) => void;
 export declare class WebRTCController {
     private readonly eventListeners;
+    private iceServers;
     private connection?;
     private localStream?;
     private mediaConstraints;
@@ -13,6 +14,7 @@ export declare class WebRTCController {
     constructor();
     addEventListener(type: WebRTCEventType, listener: WebRTCEvent): void;
     removeEventListener(type: WebRTCEventType, listener: WebRTCEvent): void;
+    setIceServers(iceServers: []): any;
     initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     addAnswer(sdpAnswer: RTCSessionDescription): Promise<void>;

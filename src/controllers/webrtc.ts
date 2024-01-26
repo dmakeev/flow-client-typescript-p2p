@@ -102,8 +102,8 @@ export class WebRTCController {
 
                     this.connection
                         .createOffer({
-                            offerToReceiveAudio: true,
-                            offerToReceiveVideo: true,
+                            //offerToReceiveAudio: true,
+                            //offerToReceiveVideo: true,
                             // VoiceActivityDetection: true,
                         })
                         .then((sdpOffer: RTCSessionDescriptionInit) => {
@@ -162,8 +162,8 @@ export class WebRTCController {
                             this.connection
                                 ?.createAnswer({
                                     //mandatory: {
-                                    offerToReceiveAudio: true,
-                                    offerToReceiveVideo: true,
+                                    //offerToReceiveAudio: true,
+                                    //offerToReceiveVideo: true,
                                     //VoiceActivityDetection: true,
                                     // },
                                 })

@@ -29,6 +29,7 @@ export enum SignalingEventType {
     CONNECTED = 'connected',
     DISCONNECTED = 'disconnected',
     PAIRED = 'paired',
+    PAIRING_CANCELLED = 'pairing_cancelled',
     INCOMING = 'incoming',
     ACCEPTED = 'accepted',
     HANGUP = 'hangup',
@@ -103,6 +104,10 @@ export class TransportController {
 
             this.socket.on('/v1/pairing/matched', (data: { pair: UserPairInfo }) => {
                 this.eventListeners.get(SignalingEventType.PAIRED)?.forEach((listener) => listener({ pair: data.pair }));
+            });
+
+            this.socket.on('/v1/pairing/cancel', (data: { pair: UserPairInfo }) => {
+                this.eventListeners.get(SignalingEventType.PAIRING_CANCELLED)?.forEach((listener) => listener({ pair: data.pair }));
             });
 
             this.socket.on('/v1/p2p/incoming', (data: { call: P2PCall; sdpOffer: RTCSessionDescription }) => {

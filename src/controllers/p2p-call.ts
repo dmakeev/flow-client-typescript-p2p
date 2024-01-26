@@ -10,6 +10,7 @@ import { WebRTCController, WebRTCEventType } from './webrtc';
 export enum P2PCallEventType {
     SIGNALING_CONNECTED = 'signaling_connected',
     PAIRED = 'paired',
+    PAIRING_CANCELLED = 'pairing_cancelled',
     INCOMING = 'incoming',
     LOCAL_STREAM = 'local_stream',
     REMOTE_STREAM = 'remote_stream',
@@ -56,6 +57,9 @@ export class P2PCallController {
 
         this.transport.addEventListener(SignalingEventType.PAIRED, (data: UserPairInfo) => {
             this.eventListeners.get(P2PCallEventType.PAIRED)?.forEach((listener) => listener(data));
+        });
+        this.transport.addEventListener(SignalingEventType.PAIRING_CANCELLED, (data: UserPairInfo) => {
+            this.eventListeners.get(P2PCallEventType.PAIRING_CANCELLED)?.forEach((listener) => listener(data));
         });
         this.transport.addEventListener(SignalingEventType.INCOMING, (data: { call: P2PCall; sdpOffer: RTCSessionDescription }) => {
             this.incomingCalls.set(data.call.id, data);
@@ -121,7 +125,6 @@ export class P2PCallController {
      */
     public async login(userIdentity: string, securityToken: string): Promise<User> {
         return new Promise((resolve: (user: User) => void, reject: (reason?: string) => void) => {
-            // setIceServers
             this.userController
                 .login(userIdentity, securityToken)
                 .then((data: { user: User; iceServers: [] }) => {
@@ -179,9 +182,7 @@ export class P2PCallController {
                 reject('You should authenticate first');
                 return;
             }
-            console.log('SSSSSSSSSSSSSSSSS');
             const sdpOffer = await this.webrtcController.initConnection(audio, video);
-            console.log('SSSSSSSSSSSSSSSSS +++++');
             this.transport
                 .call(calleeId, sdpOffer, audio, video)
                 .then((call: P2PCall) => {

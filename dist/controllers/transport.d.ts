@@ -3,6 +3,7 @@ export declare enum SignalingEventType {
     CONNECTED = "connected",
     DISCONNECTED = "disconnected",
     PAIRED = "paired",
+    PAIRING_CANCELLED = "pairing_cancelled",
     INCOMING = "incoming",
     ACCEPTED = "accepted",
     HANGUP = "hangup"
@@ -40,7 +41,10 @@ export declare class TransportController {
      * @param {string} securityToken Any security token, used by the backend to authorize user
      * @returns {Promise<User>}
      */
-    login(userIdentity: string, securityToken: string): Promise<User>;
+    login(userIdentity: string, securityToken: string): Promise<{
+        user: User;
+        iceServers: [];
+    }>;
     /**
      * Logout user
      *
