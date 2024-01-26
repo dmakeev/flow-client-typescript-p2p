@@ -1,4 +1,5 @@
 let WebRTC: any;
+
 if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') {
     WebRTC = require('react-native-webrtc');
 } else {
