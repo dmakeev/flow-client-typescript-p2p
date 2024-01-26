@@ -1,18 +1,4 @@
 import { io, Socket } from 'socket.io-client';
-//import type { RTCSessionDescription } from 'webrtc';
-//import { RTCSessionDescription } from 'react-native-webrtc';
-// let WebRTC: any;
-// const { RTCSessionDescription } = typeof document != 'undefined' ? require('@types/webrtc') : require('react-native-webrtc');
-/*
-if (typeof document != 'undefined') {
-    // React
-    WebRTC = require('@types/webrtc');
-} else if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') {
-    // React Native
-    // import { MediaStream, RTCSessionDescription, mediaDevices, RTCPeerConnection } from 'react-native-webrtc';
-    WebRTC = require('react-native-webrtc');
-}
-*/
 import { LogController } from './log';
 export var SignalingEventType;
 (function (SignalingEventType) {

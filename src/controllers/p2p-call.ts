@@ -1,9 +1,5 @@
 import { P2PCall, P2PCallStatus, UserPairInfo, type User } from '../models';
 import { SignalingEventType, TransportController } from './transport';
-// import { RTCSessionDescription } from 'react-native-webrtc';
-// import { RTCSessionDescription } from 'react-native-webrtc';
-// import type { RTCSessionDescription } from '@types/webrtc';
-// const { RTCSessionDescription } = typeof document != 'undefined' ? require('@types/webrtc') : require('react-native-webrtc');
 import { UserController } from './user';
 import { WebRTCController, WebRTCEventType } from './webrtc';
 

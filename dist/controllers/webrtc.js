@@ -1,6 +1,8 @@
+import * as WebRTCNative from 'react-native-webrtc';
 let WebRTC;
+console.log(navigator);
 if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') {
-    WebRTC = require('react-native-webrtc');
+    WebRTC = WebRTCNative; //require('react-native-webrtc');
 }
 else {
     WebRTC = { RTCPeerConnection, MediaStream, RTCSessionDescription, mediaDevices: navigator.mediaDevices };
