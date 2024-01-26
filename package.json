@@ -1,0 +1,55 @@
+{
+    "name": "flow-p2p",
+    "version": "0.0.1",
+    "description": "P2P calls for react native app",
+    "main": "dist/index.js",
+    "module": "lib/module/index",
+    "types": "dist/index.d.ts",
+    "react-native": "src/index.ts",
+    "source": "src/index.ts",
+    "files": [
+        "src",
+        "lib",
+        "android",
+        "ios",
+        "cpp",
+        "*.podspec",
+        "!ios/build",
+        "!android/build",
+        "!android/gradle",
+        "!android/gradlew",
+        "!android/gradlew.bat",
+        "!android/local.properties",
+        "!**/__tests__",
+        "!**/__fixtures__",
+        "!**/__mocks__",
+        "!**/.*"
+    ],
+    "scripts": {
+        "build": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dmakeev/react-native-flow-p2p.git"
+    },
+    "author": "Daniil Makeev <daniil-makeev@yandex.ru> (https://github.com/dmakeev)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/dmakeev/react-native-flow-p2p/issues"
+    },
+    "homepage": "https://github.com/dmakeev/react-native-flow-p2p#readme",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.6",
+        "typescript": "^5.3.3"
+    },
+    "engines": {
+        "node": ">= 18.0.0"
+    },
+    "dependencies": {
+        "@types/webrtc": "^0.0.42",
+        "socket.io-client": "^4.7.3"
+    }
+}
