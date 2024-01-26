@@ -1,30 +1,11 @@
 {
     "name": "flow-p2p",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "P2P calls for react native app",
     "main": "dist/index.js",
-    "module": "lib/module/index",
     "types": "dist/index.d.ts",
     "react-native": "src/index.ts",
     "source": "src/index.ts",
-    "files": [
-        "src",
-        "lib",
-        "android",
-        "ios",
-        "cpp",
-        "*.podspec",
-        "!ios/build",
-        "!android/build",
-        "!android/gradle",
-        "!android/gradlew",
-        "!android/gradlew.bat",
-        "!android/local.properties",
-        "!**/__tests__",
-        "!**/__fixtures__",
-        "!**/__mocks__",
-        "!**/.*"
-    ],
     "scripts": {
         "build": "tsc"
     },
