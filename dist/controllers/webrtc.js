@@ -64,13 +64,13 @@ export class WebRTCController {
             })
                 .then((stream) => {
                 this.localStream = stream;
-                setImmediate(() => {
+                setTimeout(() => {
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
                         // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
                         // listener({ stream: this.videoStream });
                         listener({ stream });
                     });
-                });
+                }, 0);
                 if (!!this.connection) {
                     this.connection.close();
                 }
@@ -129,13 +129,13 @@ export class WebRTCController {
             })
                 .then((stream) => {
                 this.localStream = stream;
-                setImmediate(() => {
+                setTimeout(() => {
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
                         // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
                         // listener({ stream: this.videoStream });
                         listener({ stream });
                     });
-                });
+                }, 0);
                 if (!!this.connection) {
                     try {
                         this.connection.close();
