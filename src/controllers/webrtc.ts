@@ -117,6 +117,13 @@ export class WebRTCController {
                         // console.log(this.connection?.iceGatheringState);
                     });
 
+                    this.connection?.addEventListener('icecandidate', (event) => {
+                        console.log('BBB 6');
+                        if (!event.candidate && !!this.connection) {
+                            resolve(this.connection.localDescription!);
+                        }
+                    });
+
                     this.connection
                         .createOffer({
                             //offerToReceiveAudio: true,
@@ -125,15 +132,15 @@ export class WebRTCController {
                         })
                         .then((sdpOffer: RTCSessionDescriptionInit) => {
                             console.log('BBB 5');
-                            this.connection?.setLocalDescription(sdpOffer);
-                            this.connection?.addEventListener('icecandidate', (event) => {
-                                console.log('BBB 6');
-                                if (!event.candidate && !!this.connection) {
-                                    resolve(this.connection.localDescription!);
-                                }
+                            this.connection?.setLocalDescription(sdpOffer).catch((error: Error) => {
+                                console.log('BBB 51', error);
+                                reject(error.message);
                             });
                         })
-                        .catch((error: Error) => reject(error.message));
+                        .catch((error: Error) => {
+                            console.log(error);
+                            reject(error.message);
+                        });
                 })
                 .catch((error: Error) => reject(error.message));
         });
