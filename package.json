@@ -1,12 +1,12 @@
 {
     "name": "flow-p2p",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "P2P calls for react native app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "exports": {
-        "./web": "./web.ts",
-        "./react-native": "./react-native.js"
+        "./web": "./src/web.ts",
+        "./react-native": "./src/react-native.js"
     },
     "typesVersions": {
         "*": {
