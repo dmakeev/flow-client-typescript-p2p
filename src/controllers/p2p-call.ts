@@ -169,7 +169,9 @@ export class P2PCallController {
      * @returns {Promise<P2PCall>}
      */
     public async startCall(calleeId: string, audio: boolean, video: boolean): Promise<P2PCall> {
+        console.log('AAA 1');
         return new Promise(async (resolve: (call: P2PCall) => void, reject: (reason: string) => void) => {
+            console.log('AAA 2');
             if (!!this.webrtcController.hasConnection) {
                 reject('Another call is in progress, you should finish it first');
                 return;
@@ -178,10 +180,13 @@ export class P2PCallController {
                 reject('You should authenticate first');
                 return;
             }
+            console.log('AAA 3');
             const sdpOffer = await this.webrtcController.initConnection(audio, video);
+            console.log('AAA 4');
             this.transport
                 .call(calleeId, sdpOffer, audio, video)
                 .then((call: P2PCall) => {
+                    console.log('AAA 5');
                     this.call = new P2PCall(call.id, call.caller, call.callee, P2PCallStatus.Pending);
                     resolve(this.call);
                 })

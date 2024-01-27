@@ -68,12 +68,14 @@ export class WebRTCController {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             }
+            console.log('BBB 1');
             WebRTC.mediaDevices
                 .getUserMedia({
                     audio: audio ? this.mediaConstraints.audio : false,
                     video: video ? this.mediaConstraints.video : false,
                 })
                 .then((stream: MediaStream) => {
+                    console.log('BBB 2');
                     this.localStream = stream;
                     setTimeout(() => {
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
@@ -86,11 +88,13 @@ export class WebRTCController {
                     if (!!this.connection) {
                         this.connection.close();
                     }
+                    console.log('BBB 3');
                     try {
                         this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                     } catch (e) {
                         console.log(e);
                     }
+                    console.log('BBB 4');
 
                     if (!this.connection) {
                         reject('Failed to create RTCPeerConnection');
@@ -120,8 +124,10 @@ export class WebRTCController {
                             // VoiceActivityDetection: true,
                         })
                         .then((sdpOffer: RTCSessionDescriptionInit) => {
+                            console.log('BBB 5');
                             this.connection?.setLocalDescription(sdpOffer);
                             this.connection?.addEventListener('icecandidate', (event) => {
+                                console.log('BBB 6');
                                 if (!event.candidate && !!this.connection) {
                                     resolve(this.connection.localDescription!);
                                 }
