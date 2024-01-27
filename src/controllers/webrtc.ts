@@ -132,10 +132,15 @@ export class WebRTCController {
                         })
                         .then((sdpOffer: RTCSessionDescriptionInit) => {
                             console.log('BBB 5');
-                            this.connection?.setLocalDescription(sdpOffer).catch((error: Error) => {
-                                console.log('BBB 51', error);
-                                reject(error.message);
-                            });
+                            this.connection
+                                ?.setLocalDescription(sdpOffer)
+                                .then(() => {
+                                    console.log('BBB 50');
+                                })
+                                .catch((error: Error) => {
+                                    console.log('BBB 51', error);
+                                    reject(error.message);
+                                });
                         })
                         .catch((error: Error) => {
                             console.log(error);
