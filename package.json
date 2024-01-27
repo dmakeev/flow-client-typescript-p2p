@@ -1,12 +1,12 @@
 {
     "name": "flow-p2p",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "description": "P2P calls for react native app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "exports": {
-        "./web": "./src/web.ts",
-        "./react-native": "./src/react-native.ts"
+        "./web": "./dist/web.js",
+        "./react-native": "./dist/react-native.js"
     },
     "typesVersions": {
         "*": {
@@ -19,7 +19,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/dmakeev/react-native-flow-p2p.git"
+        "url": "git+https://github.com/dmakeev/flow-client-typescript-p2p.git"
     },
     "author": "Daniil Makeev <daniil-makeev@yandex.ru> (https://github.com/dmakeev)",
     "license": "MIT",
