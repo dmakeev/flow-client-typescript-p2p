@@ -1,11 +1,19 @@
-import * as WebRTCNative from 'react-native-webrtc';
-let WebRTC;
+//import { WebRTC } from '../helpers/webrtc';
+// import { WebRTC } from '../index';
+/*
 console.log(navigator);
-if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') {
-    WebRTC = WebRTCNative; //require('react-native-webrtc');
-}
-else {
+// if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') {
+let WebRTC: any;
+if (typeof localStorage) {
+    // WebRTC = WebRTCNative;
+    WebRTC = require('react-native-webrtc');
+} else {
     WebRTC = { RTCPeerConnection, MediaStream, RTCSessionDescription, mediaDevices: navigator.mediaDevices };
+}
+*/
+let WebRTC;
+export function injectWebRTC(WebRTCWrapper) {
+    WebRTC = WebRTCWrapper;
 }
 export var WebRTCEventType;
 (function (WebRTCEventType) {

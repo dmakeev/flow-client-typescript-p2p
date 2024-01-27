@@ -1,3 +1,4 @@
+export declare function injectWebRTC(WebRTCWrapper: any): void;
 export declare enum WebRTCEventType {
     REMOTE_STREAM = "remote_stream",
     LOCAL_STREAM = "local_stream",

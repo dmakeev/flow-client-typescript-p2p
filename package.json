@@ -1,11 +1,19 @@
 {
     "name": "flow-p2p",
-    "version": "0.0.4",
+    "version": "0.0.6",
     "description": "P2P calls for react native app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "react-native": "src/index.ts",
-    "source": "src/index.ts",
+    "exports": {
+        "./web": "./web.ts",
+        "./react-native": "./react-native.js"
+    },
+    "typesVersions": {
+        "*": {
+            "./web": ["dist/index.d.ts"],
+            "./react-native": ["dist/index.d.ts"]
+        }
+    },
     "scripts": {
         "build": "tsc"
     },
@@ -23,6 +31,7 @@
         "registry": "https://registry.npmjs.org/"
     },
     "devDependencies": {
+        "react-native-webrtc": "^118.0.1",
         "@types/node": "^20.10.6",
         "typescript": "^5.3.3"
     },
@@ -31,7 +40,6 @@
     },
     "dependencies": {
         "@types/webrtc": "^0.0.42",
-        "react-native-webrtc": "^118.0.1",
         "socket.io-client": "^4.7.3"
     }
 }
