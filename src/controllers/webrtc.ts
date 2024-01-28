@@ -235,8 +235,13 @@ export class WebRTCController {
                                     // },
                                 })
                                 .then((sdpAnswer: RTCSessionDescriptionInit) => {
-                                    this.connection?.setLocalDescription(sdpAnswer);
-                                    resolve(this.connection?.localDescription!);
+                                    this.connection
+                                        ?.setLocalDescription(sdpAnswer)
+                                        .then(() => {
+                                            console.log('!!!!!! A');
+                                            resolve(this.connection?.localDescription!);
+                                        })
+                                        .catch((error: Error) => reject(error));
                                 })
                                 .catch((error: Error) => reject(error));
                         })

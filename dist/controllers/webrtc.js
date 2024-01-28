@@ -216,8 +216,13 @@ export class WebRTCController {
                     // },
                     })
                         .then((sdpAnswer) => {
-                        this.connection?.setLocalDescription(sdpAnswer);
-                        resolve(this.connection?.localDescription);
+                        this.connection
+                            ?.setLocalDescription(sdpAnswer)
+                            .then(() => {
+                            console.log('!!!!!! A');
+                            resolve(this.connection?.localDescription);
+                        })
+                            .catch((error) => reject(error));
                     })
                         .catch((error) => reject(error));
                 })
