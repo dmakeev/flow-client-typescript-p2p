@@ -144,6 +144,7 @@ export class TransportController {
                 { userIdentity, securityToken },
                 (data: { error?: UniError; iceServers?: []; user?: User }) => {
                     if (!data || !!data.error || !data.user) {
+                        console.log('1', data);
                         reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                         return;
                     }
@@ -245,6 +246,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/start', { calleeId, sdpOffer, audio, video }, (data: { error?: UniError; call?: P2PCall }) => {
                 if (!!data.error || !data.call) {
+                    console.log('2', data);
                     reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
@@ -274,6 +276,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/accept', { callId, sdpAnswer, audio, video }, (data: { error?: UniError; call?: P2PCall }) => {
                 if (!!data.error || !data.call) {
+                    console.log('3', data);
                     reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
@@ -350,6 +353,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/reconnect', { callId, sdpOffer }, (data: { error?: UniError }) => {
                 if (!!data.error || !callId) {
+                    console.log('4', data);
                     reject(new Error(data.error?.reason ?? 'Unknown error'));
                     return;
                 }
@@ -377,6 +381,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/acept-reconnect', { callId, sdpAnswer }, (data: { error: UniError }) => {
                 if (!!data.error || !callId) {
+                    console.log('5', data);
                     reject(new Error(data.error?.reason ?? 'Unknown error'));
                     return;
                 }

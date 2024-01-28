@@ -117,6 +117,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/user/login', { userIdentity, securityToken }, (data) => {
                 if (!data || !!data.error || !data.user) {
+                    console.log('1', data);
                     reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
@@ -213,6 +214,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/start', { calleeId, sdpOffer, audio, video }, (data) => {
                 if (!!data.error || !data.call) {
+                    console.log('2', data);
                     reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
@@ -241,6 +243,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/accept', { callId, sdpAnswer, audio, video }, (data) => {
                 if (!!data.error || !data.call) {
+                    console.log('3', data);
                     reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
@@ -314,6 +317,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/reconnect', { callId, sdpOffer }, (data) => {
                 if (!!data.error || !callId) {
+                    console.log('4', data);
                     reject(new Error(data.error?.reason ?? 'Unknown error'));
                     return;
                 }
@@ -340,6 +344,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/p2p/acept-reconnect', { callId, sdpAnswer }, (data) => {
                 if (!!data.error || !callId) {
+                    console.log('5', data);
                     reject(new Error(data.error?.reason ?? 'Unknown error'));
                     return;
                 }

@@ -94,6 +94,7 @@ export class WebRTCController {
                     // console.log(this.connection?.iceGatheringState);
                 });
                 this.connection?.addEventListener('icecandidate', (event) => {
+                    console.log('BBB 70', event);
                     if (!event.candidate && !!this.connection) {
                         console.log('BBB 7');
                         resolve(this.connection.localDescription);
