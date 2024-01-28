@@ -109,7 +109,9 @@ export class WebRTCController {
                     // console.log('Negotiation needed');
                 });
                 this.connection?.addEventListener('icecandidate', (event) => {
-                    this.outgoingIceCandidates.push(event.candidate);
+                    if (event.candidate) {
+                        this.outgoingIceCandidates.push(event.candidate);
+                    }
                 });
                 this.connection
                     .createOffer({
@@ -169,6 +171,9 @@ export class WebRTCController {
                     this.connection.addTrack(track, this.localStream);
                 }
                 this.connection?.addEventListener('icecandidate', (event) => {
+                    if (!event.candidate) {
+                        return;
+                    }
                     this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                         listener({ candidate: event.candidate });
                     });
