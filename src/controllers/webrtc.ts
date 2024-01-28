@@ -110,6 +110,7 @@ export class WebRTCController {
 
                     this.connection?.addEventListener('icecandidate', (event) => {
                         if (!event.candidate && !!this.connection) {
+                            console.log('BBB 7');
                             resolve(this.connection.localDescription!);
                         }
                     });

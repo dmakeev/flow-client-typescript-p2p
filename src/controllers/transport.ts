@@ -57,7 +57,7 @@ export class TransportController {
             if (!!this.socket) {
                 this.disconnect();
             }
-            this.socket = io(url, { path: '/signal/socket.io' /*transports: ['websocket'] */ });
+            this.socket = io(url, { path: '/signal/socket.io', transports: ['websocket'] });
 
             this.socket.on('connect', () => {
                 this.logController.log('Signaling socket is connected');
