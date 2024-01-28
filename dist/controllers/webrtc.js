@@ -20,6 +20,7 @@ export var WebRTCEventType;
     WebRTCEventType["REMOTE_STREAM"] = "remote_stream";
     WebRTCEventType["LOCAL_STREAM"] = "local_stream";
     WebRTCEventType["INTERRUPTED"] = "interrupted";
+    WebRTCEventType["ON_ICE_CANDIDATE"] = "on_ice_candidate";
 })(WebRTCEventType || (WebRTCEventType = {}));
 export class WebRTCController {
     eventListeners = new Map();
@@ -102,6 +103,11 @@ export class WebRTCController {
                     if (!event.candidate && !!this.connection) {
                         console.log('BBB 7');
                         // resolve(this.connection.localDescription!);
+                    }
+                    else {
+                        this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                            listener({ candidate: event.candidate });
+                        });
                     }
                 });
                 this.connection

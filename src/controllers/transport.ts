@@ -398,4 +398,32 @@ export class TransportController {
             });
         });
     }
+
+    /**
+     * Send ICE candidate to another user
+     *
+     * @param {string}                callId  User ID to call to
+     * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
+     * @returns {Promise<void>}
+     */
+    public async sendIceCandidate(callId: string, candidate: RTCIceCandidate): Promise<void> {
+        return new Promise((resolve: (value: void) => void, reject: (error: Error) => void) => {
+            if (!this.socket) {
+                reject(new Error('Socket is not connected'));
+                return;
+            }
+            if (!this.userId) {
+                reject(new Error('You should authenticate first'));
+                return;
+            }
+            this.socket.emit('/v1/p2p/acept-reconnect', { callId, candidate }, (data: { error: UniError }) => {
+                if (!!data.error || !callId) {
+                    console.log('9', data);
+                    reject(new Error(data.error?.reason ?? 'Unknown error'));
+                    return;
+                }
+                resolve();
+            });
+        });
+    }
 }

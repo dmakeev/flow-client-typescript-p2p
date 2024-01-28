@@ -2,7 +2,8 @@ export declare function injectWebRTC(WebRTCWrapper: any): void;
 export declare enum WebRTCEventType {
     REMOTE_STREAM = "remote_stream",
     LOCAL_STREAM = "local_stream",
-    INTERRUPTED = "interrupted"
+    INTERRUPTED = "interrupted",
+    ON_ICE_CANDIDATE = "on_ice_candidate"
 }
 export type WebRTCEvent = (data?: any) => void;
 export declare class WebRTCController {

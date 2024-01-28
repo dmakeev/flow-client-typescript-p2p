@@ -114,4 +114,12 @@ export declare class TransportController {
      * @returns {Promise<void>}
      */
     acceptReconnect(callId: string, sdpAnswer: RTCSessionDescription): Promise<void>;
+    /**
+     * Send ICE candidate to another user
+     *
+     * @param {string}                callId  User ID to call to
+     * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
+     * @returns {Promise<void>}
+     */
+    sendIceCandidate(callId: string, candidate: RTCIceCandidate): Promise<void>;
 }

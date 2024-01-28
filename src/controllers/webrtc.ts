@@ -22,6 +22,7 @@ export enum WebRTCEventType {
     REMOTE_STREAM = 'remote_stream',
     LOCAL_STREAM = 'local_stream',
     INTERRUPTED = 'interrupted',
+    ON_ICE_CANDIDATE = 'on_ice_candidate',
 }
 
 export type WebRTCEvent = (data?: any) => void;
@@ -118,6 +119,10 @@ export class WebRTCController {
                         if (!event.candidate && !!this.connection) {
                             console.log('BBB 7');
                             // resolve(this.connection.localDescription!);
+                        } else {
+                            this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                                listener({ candidate: event.candidate });
+                            });
                         }
                     });
                     this.connection
