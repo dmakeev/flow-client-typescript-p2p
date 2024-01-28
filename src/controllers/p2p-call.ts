@@ -215,7 +215,8 @@ export class P2PCallController {
      */
     public async startCall(calleeId: string, audio: boolean, video: boolean): Promise<P2PCall> {
         return new Promise(async (resolve: (call: P2PCall) => void, reject: (error: Error) => void) => {
-            if (!!this.webrtcController.hasConnection) {
+            if (!!this.call) {
+                console.log(this.call);
                 reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
@@ -246,7 +247,8 @@ export class P2PCallController {
      */
     public async acceptCall(callId: string, audio: boolean, video: boolean): Promise<P2PCall> {
         return new Promise(async (resolve: (call: P2PCall) => void, reject: (error: Error) => void) => {
-            if (!!this.webrtcController.hasConnection) {
+            if (!!this.call) {
+                console.log(this.call);
                 reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
