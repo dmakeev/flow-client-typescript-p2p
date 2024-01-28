@@ -21,15 +21,35 @@ export class P2PCallController {
     webrtcController = new WebRTCController();
     incomingCalls = new Map();
     static instance;
+    /**
+     * Returns active call, if any
+     *
+     * @returns {P2PCall | undefined}
+     */
     get currentCall() {
         return this.call;
     }
+    /**
+     * Returns current user, if any
+     *
+     * @returns {User | undefined}
+     */
     get currentUser() {
         return this.userController.user;
     }
+    /**
+     * Check if connection to the signaling server is active
+     *
+     * @returns {boolean}
+     */
     get signalingConnected() {
         return this.transport.hasConnection;
     }
+    /**
+     * Singletone
+     *
+     * @returns {P2PCallController}
+     */
     static getInstance() {
         return this.instance || (this.instance = new this());
     }
@@ -37,31 +57,39 @@ export class P2PCallController {
         for (const v of Object.values(P2PCallEventType)) {
             this.eventListeners.set(v, new Set());
         }
+        // We receive a message from the signaling server about new pair
         this.transport.addEventListener(SignalingEventType.PAIRED, (data) => {
             this.eventListeners.get(P2PCallEventType.PAIRED)?.forEach((listener) => listener(data));
         });
+        // Active pairing was cancelled by another user
         this.transport.addEventListener(SignalingEventType.PAIRING_CANCELLED, (data) => {
             this.eventListeners.get(P2PCallEventType.PAIRING_CANCELLED)?.forEach((listener) => listener(data));
         });
+        // New incoming call
         this.transport.addEventListener(SignalingEventType.INCOMING, (data) => {
             this.incomingCalls.set(data.call.id, data);
             this.eventListeners.get(P2PCallEventType.INCOMING)?.forEach((listener) => listener({ call: data.call }));
         });
+        // Call was hanged up
         this.transport.addEventListener(SignalingEventType.HANGUP, (data) => {
             this.call = undefined;
             this.eventListeners.get(P2PCallEventType.HANGUP)?.forEach((listener) => listener(data));
             this.webrtcController.closeConnection();
         });
+        // Local MediaStream is ready
         this.webrtcController.addEventListener(WebRTCEventType.LOCAL_STREAM, (data) => {
             this.eventListeners.get(P2PCallEventType.LOCAL_STREAM)?.forEach((listener) => listener(data));
         });
+        // Remote MediaStream is ready
         this.webrtcController.addEventListener(WebRTCEventType.REMOTE_STREAM, (data) => {
             this.eventListeners.get(P2PCallEventType.REMOTE_STREAM)?.forEach((listener) => listener(data));
         });
+        // Your outgoing call was accepted
         this.transport.addEventListener(SignalingEventType.ACCEPTED, (data) => {
             this.webrtcController.callStarted();
             this.webrtcController.addAnswer(data.sdpAnswer);
         });
+        // Incoming ICE candidate
         this.transport.addEventListener(SignalingEventType.INCOMING_ICE, (data) => {
             if (data.callId === this.call?.id) {
                 this.webrtcController.addCandidate(data.candidate);
@@ -70,6 +98,7 @@ export class P2PCallController {
                 console.warn('Incoming candidate for incorrect call');
             }
         });
+        // New local ICE candidate was generated
         this.webrtcController.addEventListener(WebRTCEventType.ON_ICE_CANDIDATE, (data) => {
             if (!this.call) {
                 return;
@@ -103,7 +132,6 @@ export class P2PCallController {
     /**
      * Disconnect from the signaling server
      *
-     * @param {string} url  Url of the signaling server to connect to
      *
      */
     disconnect() {
@@ -140,7 +168,7 @@ export class P2PCallController {
     /**
      * Start pairing process
      *
-     * @returns {Promise<User>}
+     * @returns {Promise<void>}
      */
     startPairing() {
         return this.transport.startPairing();
@@ -184,7 +212,7 @@ export class P2PCallController {
         });
     }
     /**
-     * Accept an incoming call
+     * Accept the incoming call
      *
      * @param {string}  callId  Id of user to call to
      * @param {boolean} audio     Should the audio be enabled by default
@@ -220,10 +248,10 @@ export class P2PCallController {
         });
     }
     /**
-     * Accept an incoming call
+     * Reject the incoming call
      *
      * @param {string}  callId           Id of user to call to
-     * @param {string?} rejectionReason  Optianl reason, will be delivered to caller
+     * @param {string?} rejectionReason  Optional reason, will be delivered to caller
      * @returns {Promise<void>}
      */
     async rejectCall(callId, rejectionReason) {

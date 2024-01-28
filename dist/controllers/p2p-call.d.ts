@@ -18,9 +18,29 @@ export declare class P2PCallController {
     private readonly webrtcController;
     private incomingCalls;
     private static instance;
+    /**
+     * Returns active call, if any
+     *
+     * @returns {P2PCall | undefined}
+     */
     get currentCall(): P2PCall | undefined;
+    /**
+     * Returns current user, if any
+     *
+     * @returns {User | undefined}
+     */
     get currentUser(): User | undefined;
+    /**
+     * Check if connection to the signaling server is active
+     *
+     * @returns {boolean}
+     */
     get signalingConnected(): boolean;
+    /**
+     * Singletone
+     *
+     * @returns {P2PCallController}
+     */
     static getInstance(): P2PCallController;
     constructor();
     addEventListener(type: P2PCallEventType, listener: P2PCallEvent): void;
@@ -35,7 +55,6 @@ export declare class P2PCallController {
     /**
      * Disconnect from the signaling server
      *
-     * @param {string} url  Url of the signaling server to connect to
      *
      */
     disconnect(): void;
@@ -56,7 +75,7 @@ export declare class P2PCallController {
     /**
      * Start pairing process
      *
-     * @returns {Promise<User>}
+     * @returns {Promise<void>}
      */
     startPairing(): Promise<void>;
     /**
@@ -75,7 +94,7 @@ export declare class P2PCallController {
      */
     startCall(calleeId: string, audio: boolean, video: boolean): Promise<P2PCall>;
     /**
-     * Accept an incoming call
+     * Accept the incoming call
      *
      * @param {string}  callId  Id of user to call to
      * @param {boolean} audio     Should the audio be enabled by default
@@ -84,10 +103,10 @@ export declare class P2PCallController {
      */
     acceptCall(callId: string, audio: boolean, video: boolean): Promise<P2PCall>;
     /**
-     * Accept an incoming call
+     * Reject the incoming call
      *
      * @param {string}  callId           Id of user to call to
-     * @param {string?} rejectionReason  Optianl reason, will be delivered to caller
+     * @param {string?} rejectionReason  Optional reason, will be delivered to caller
      * @returns {Promise<void>}
      */
     rejectCall(callId: string, rejectionReason: string): Promise<void>;
