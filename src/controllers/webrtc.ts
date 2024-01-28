@@ -33,6 +33,7 @@ export class WebRTCController {
     private connection?: RTCPeerConnection;
     private localStream?: MediaStream;
     // private incomingIceCandidates: RTCIceCandidate[] = [];
+    private outgoingIceCandidates: RTCIceCandidate[] = [];
     //private videoStream?: MediaStream;
     private mediaConstraints = {
         audio: true,
@@ -61,11 +62,33 @@ export class WebRTCController {
         this.eventListeners.get(type)?.delete(listener);
     }
 
-    public setIceServers(iceServers: []): any {
+    public setIceServers(iceServers: []): void {
         this.iceServers = iceServers;
     }
 
+    public callStarted(): void {
+        this.outgoingIceCandidates.forEach((candidate: RTCIceCandidate) => {
+            this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                listener({ candidate });
+            });
+        });
+        this.outgoingIceCandidates.length = 0;
+        // this.outgoingIceCandidates.push(event.candidate!);
+        /*
+                        console.log('BBB 70', event);
+                        if (!event.candidate && !!this.connection) {
+                            console.log('BBB 7');
+                            // resolve(this.connection.localDescription!);
+                        } else {
+                            this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                                listener({ candidate: event.candidate });
+                            });
+                        }
+                        */
+    }
+
     public async initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription> {
+        this.outgoingIceCandidates.length = 0;
         return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
@@ -116,6 +139,8 @@ export class WebRTCController {
                     });
 
                     this.connection?.addEventListener('icecandidate', (event) => {
+                        this.outgoingIceCandidates.push(event.candidate!);
+                        /*
                         console.log('BBB 70', event);
                         if (!event.candidate && !!this.connection) {
                             console.log('BBB 7');
@@ -125,6 +150,7 @@ export class WebRTCController {
                                 listener({ candidate: event.candidate });
                             });
                         }
+                        */
                     });
                     this.connection
                         .createOffer({
@@ -157,6 +183,7 @@ export class WebRTCController {
     }
 
     public async initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription> {
+        this.outgoingIceCandidates.length = 0;
         return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());

@@ -58,6 +58,8 @@ export class P2PCallController {
             this.eventListeners.get(P2PCallEventType.REMOTE_STREAM)?.forEach((listener) => listener(data));
         });
         this.transport.addEventListener(SignalingEventType.ACCEPTED, (data) => {
+            console.log('AAAAAAAAAAAAAAAA');
+            this.webrtcController.callStarted();
             this.webrtcController.addAnswer(data.sdpAnswer);
         });
         this.transport.addEventListener(SignalingEventType.INCOMING_ICE, (data) => {
@@ -67,6 +69,12 @@ export class P2PCallController {
             else {
                 console.warn('Incoming candidate for incorrect call');
             }
+        });
+        this.webrtcController.addEventListener(WebRTCEventType.ON_ICE_CANDIDATE, (data) => {
+            if (!this.call) {
+                return;
+            }
+            this.transport.sendIceCandidate(this.call.id, data.candidate);
         });
         // this.incomingCalls.delete(callId);
     }

@@ -28,6 +28,7 @@ export class WebRTCController {
     connection;
     localStream;
     // private incomingIceCandidates: RTCIceCandidate[] = [];
+    outgoingIceCandidates = [];
     //private videoStream?: MediaStream;
     mediaConstraints = {
         audio: true,
@@ -54,7 +55,28 @@ export class WebRTCController {
     setIceServers(iceServers) {
         this.iceServers = iceServers;
     }
+    callStarted() {
+        this.outgoingIceCandidates.forEach((candidate) => {
+            this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                listener({ candidate });
+            });
+        });
+        this.outgoingIceCandidates.length = 0;
+        // this.outgoingIceCandidates.push(event.candidate!);
+        /*
+                        console.log('BBB 70', event);
+                        if (!event.candidate && !!this.connection) {
+                            console.log('BBB 7');
+                            // resolve(this.connection.localDescription!);
+                        } else {
+                            this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                                listener({ candidate: event.candidate });
+                            });
+                        }
+                        */
+    }
     async initConnection(audio, video) {
+        this.outgoingIceCandidates.length = 0;
         return new Promise((resolve, reject) => {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track) => track.stop());
@@ -100,16 +122,18 @@ export class WebRTCController {
                     console.log('A3', this.connection?.iceGatheringState);
                 });
                 this.connection?.addEventListener('icecandidate', (event) => {
+                    this.outgoingIceCandidates.push(event.candidate);
+                    /*
                     console.log('BBB 70', event);
                     if (!event.candidate && !!this.connection) {
                         console.log('BBB 7');
                         // resolve(this.connection.localDescription!);
-                    }
-                    else {
+                    } else {
                         this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                             listener({ candidate: event.candidate });
                         });
                     }
+                    */
                 });
                 this.connection
                     .createOffer({
@@ -141,6 +165,7 @@ export class WebRTCController {
         });
     }
     async initConnectionAnswering(sdpOffer, audio, video) {
+        this.outgoingIceCandidates.length = 0;
         return new Promise((resolve, reject) => {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track) => track.stop());
