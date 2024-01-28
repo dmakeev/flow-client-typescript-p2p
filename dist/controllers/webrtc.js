@@ -62,18 +62,6 @@ export class WebRTCController {
             });
         });
         this.outgoingIceCandidates.length = 0;
-        // this.outgoingIceCandidates.push(event.candidate!);
-        /*
-                        console.log('BBB 70', event);
-                        if (!event.candidate && !!this.connection) {
-                            console.log('BBB 7');
-                            // resolve(this.connection.localDescription!);
-                        } else {
-                            this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
-                                listener({ candidate: event.candidate });
-                            });
-                        }
-                        */
     }
     async initConnection(audio, video) {
         this.outgoingIceCandidates.length = 0;
@@ -98,7 +86,6 @@ export class WebRTCController {
                 if (!!this.connection) {
                     this.connection.close();
                 }
-                console.log('!!!!!!!!!!', this.iceServers);
                 this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                 if (!this.connection) {
                     reject(new Error('Failed to create RTCPeerConnection'));
@@ -113,27 +100,16 @@ export class WebRTCController {
                         ?.forEach((listener) => listener({ stream: event.streams[0] }));
                 });
                 this.connection.addEventListener('iceconnectionstatechange', () => {
-                    console.log('A1', this.connection?.iceConnectionState);
+                    // console.log('ICE connection state', this.connection?.iceConnectionState);
                 });
                 this.connection.addEventListener('icegatheringstatechange', () => {
-                    console.log('A2', this.connection?.iceGatheringState);
+                    // console.log('ICE gathering state', this.connection?.iceGatheringState);
                 });
                 this.connection.addEventListener('negotiationneeded', () => {
-                    console.log('A3', this.connection?.iceGatheringState);
+                    // console.log('Negotiation needed');
                 });
                 this.connection?.addEventListener('icecandidate', (event) => {
                     this.outgoingIceCandidates.push(event.candidate);
-                    /*
-                    console.log('BBB 70', event);
-                    if (!event.candidate && !!this.connection) {
-                        console.log('BBB 7');
-                        // resolve(this.connection.localDescription!);
-                    } else {
-                        this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
-                            listener({ candidate: event.candidate });
-                        });
-                    }
-                    */
                 });
                 this.connection
                     .createOffer({
@@ -142,24 +118,18 @@ export class WebRTCController {
                 // VoiceActivityDetection: true,
                 })
                     .then((sdpOffer) => {
-                    console.log('BBB 501', sdpOffer.type);
-                    console.log('BBB 502', sdpOffer.sdp);
                     this.connection
                         ?.setLocalDescription(sdpOffer)
                         .then(() => {
-                        console.log('BBB 53', this.connection?.localDescription);
                         resolve(this.connection?.localDescription);
                     })
                         .catch((error) => {
-                        console.log('BBB 54', error);
                         reject(error);
                     });
                 })
                     .catch((error) => {
-                    console.log(error);
                     reject(error);
                 });
-                console.log('BBB 55');
             })
                 .catch((error) => reject(error));
         });
@@ -190,7 +160,6 @@ export class WebRTCController {
                     }
                     catch (error) { }
                 }
-                console.log('!!!!!!!!!! 2', this.iceServers);
                 this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                 if (!this.connection) {
                     reject(new Error('Unable to create RTCPeerConnection'));
@@ -219,7 +188,6 @@ export class WebRTCController {
                         this.connection
                             ?.setLocalDescription(sdpAnswer)
                             .then(() => {
-                            console.log('!!!!!! A');
                             resolve(this.connection?.localDescription);
                         })
                             .catch((error) => reject(error));
@@ -236,13 +204,13 @@ export class WebRTCController {
                         ?.forEach((listener) => listener({ stream: event.streams[0] }));
                 });
                 this.connection.addEventListener('iceconnectionstatechange', () => {
-                    console.log('B1', this.connection?.iceConnectionState);
+                    // console.log('ICE connection state', this.connection?.iceConnectionState);
                 });
                 this.connection.addEventListener('icegatheringstatechange', () => {
-                    console.log('B2', this.connection?.iceGatheringState);
+                    // console.log('ICE gathering state', this.connection?.iceGatheringState);
                 });
                 this.connection.addEventListener('negotiationneeded', () => {
-                    console.log('B3', this.connection?.iceGatheringState);
+                    // console.log('Negotiation needed');
                 });
             })
                 .catch((error) => reject(error));
@@ -260,9 +228,9 @@ export class WebRTCController {
             console.warn('Trying to set ICE Candidate for non-existing connection');
             return;
         }
-        console.log(this.connection.connectionState);
-        // incomingIceCandidates
-        return this.connection.addIceCandidate(candidate);
+        if (!!candidate) {
+            return this.connection.addIceCandidate(candidate);
+        }
     }
     closeConnection() {
         if (!!this.localStream) {
