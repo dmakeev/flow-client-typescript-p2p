@@ -11,6 +11,7 @@ export enum SignalingEventType {
     INCOMING = 'incoming',
     ACCEPTED = 'accepted',
     HANGUP = 'hangup',
+    INCOMING_ICE = 'incoming_ice',
 }
 
 export type SignalingEvent = (data?: any) => void;
@@ -105,7 +106,15 @@ export class TransportController {
             this.socket.on('/v1/p2p/hangup', (data: { callId: string }) => {
                 this.eventListeners.get(SignalingEventType.HANGUP)?.forEach((listener) => listener({ callId: data.callId }));
             });
-            ///v1/p2p/hangup
+
+            this.socket.on('/v1/p2p/incoming_ice', (data: { callId: string; candidate: RTCIceCandidate }) => {
+                console.log('#######', data.candidate);
+                this.eventListeners
+                    .get(SignalingEventType.INCOMING_ICE)
+                    ?.forEach((listener: (data: { callId: string; candidate: RTCIceCandidate }) => void) =>
+                        listener({ callId: data.callId, candidate: data.candidate })
+                    );
+            });
         });
     }
     /**

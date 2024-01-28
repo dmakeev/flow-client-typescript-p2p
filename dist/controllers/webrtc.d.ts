@@ -19,5 +19,6 @@ export declare class WebRTCController {
     initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     addAnswer(sdpAnswer: RTCSessionDescription): Promise<void>;
+    addCandidate(candidate: RTCIceCandidate): Promise<void>;
     closeConnection(): void;
 }

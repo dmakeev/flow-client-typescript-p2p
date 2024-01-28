@@ -6,7 +6,8 @@ export declare enum SignalingEventType {
     PAIRING_CANCELLED = "pairing_cancelled",
     INCOMING = "incoming",
     ACCEPTED = "accepted",
-    HANGUP = "hangup"
+    HANGUP = "hangup",
+    INCOMING_ICE = "incoming_ice"
 }
 export type SignalingEvent = (data?: any) => void;
 export declare class TransportController {

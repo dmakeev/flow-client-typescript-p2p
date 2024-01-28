@@ -9,6 +9,7 @@ export var SignalingEventType;
     SignalingEventType["INCOMING"] = "incoming";
     SignalingEventType["ACCEPTED"] = "accepted";
     SignalingEventType["HANGUP"] = "hangup";
+    SignalingEventType["INCOMING_ICE"] = "incoming_ice";
 })(SignalingEventType || (SignalingEventType = {}));
 export class TransportController {
     static instance;
@@ -82,7 +83,12 @@ export class TransportController {
             this.socket.on('/v1/p2p/hangup', (data) => {
                 this.eventListeners.get(SignalingEventType.HANGUP)?.forEach((listener) => listener({ callId: data.callId }));
             });
-            ///v1/p2p/hangup
+            this.socket.on('/v1/p2p/incoming_ice', (data) => {
+                console.log('#######', data.candidate);
+                this.eventListeners
+                    .get(SignalingEventType.INCOMING_ICE)
+                    ?.forEach((listener) => listener({ callId: data.callId, candidate: data.candidate }));
+            });
         });
     }
     /**

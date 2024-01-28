@@ -31,6 +31,7 @@ export class WebRTCController {
     private iceServers: [] = [];
     private connection?: RTCPeerConnection;
     private localStream?: MediaStream;
+    // private incomingIceCandidates: RTCIceCandidate[] = [];
     //private videoStream?: MediaStream;
     private mediaConstraints = {
         audio: true,
@@ -234,6 +235,16 @@ export class WebRTCController {
             return;
         }
         return this.connection.setRemoteDescription(sdpAnswer);
+    }
+
+    public async addCandidate(candidate: RTCIceCandidate): Promise<void> {
+        if (!this.connection) {
+            console.warn('Trying to set ICE Candidate for non-existing connection');
+            return;
+        }
+        console.log(this.connection.connectionState);
+        // incomingIceCandidates
+        return this.connection.addIceCandidate(candidate);
     }
 
     public closeConnection(): void {

@@ -61,9 +61,6 @@ export class P2PCallController {
             this.incomingCalls.set(data.call.id, data);
             this.eventListeners.get(P2PCallEventType.INCOMING)?.forEach((listener) => listener({ call: data.call }));
         });
-        this.transport.addEventListener(SignalingEventType.ACCEPTED, (data: { call: P2PCall; sdpAnswer: RTCSessionDescription }) => {
-            this.webrtcController.addAnswer(data.sdpAnswer);
-        });
         this.transport.addEventListener(SignalingEventType.HANGUP, (data: { callId: string }) => {
             this.eventListeners.get(P2PCallEventType.HANGUP)?.forEach((listener) => listener(data));
             this.webrtcController.closeConnection();
@@ -74,6 +71,17 @@ export class P2PCallController {
         this.webrtcController.addEventListener(WebRTCEventType.REMOTE_STREAM, (data: { stream: MediaStream }) => {
             this.eventListeners.get(P2PCallEventType.REMOTE_STREAM)?.forEach((listener) => listener(data));
         });
+        this.transport.addEventListener(SignalingEventType.ACCEPTED, (data: { call: P2PCall; sdpAnswer: RTCSessionDescription }) => {
+            this.webrtcController.addAnswer(data.sdpAnswer);
+        });
+        this.transport.addEventListener(SignalingEventType.INCOMING_ICE, (data: { callId: string; candidate: RTCIceCandidate }) => {
+            if (data.callId === this.call?.id) {
+                this.webrtcController.addCandidate(data.candidate);
+            } else {
+                console.warn('Incoming candidate for incorrect call');
+            }
+        });
+
         // this.incomingCalls.delete(callId);
     }
 
