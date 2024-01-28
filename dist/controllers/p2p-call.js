@@ -109,6 +109,7 @@ export class P2PCallController {
                 this.webrtcController.setIceServers(data.iceServers);
             })
                 .catch((error) => {
+                console.log(error);
                 reject(error.message);
             });
         });
