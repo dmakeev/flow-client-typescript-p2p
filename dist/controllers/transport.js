@@ -117,6 +117,7 @@ export class TransportController {
             }
             this.socket.emit('/v1/user/login', { userIdentity, securityToken }, (data) => {
                 if (!data || !data.user) {
+                    console.log(data);
                     reject(data.reason ?? 'Unknown error');
                     return;
                 }
