@@ -123,7 +123,7 @@ export class WebRTCController {
                             resolve(this.connection.localDescription!);
                         }
                     });
-
+                    console.log('BBB 500');
                     this.connection
                         .createOffer({
                             //offerToReceiveAudio: true,
@@ -131,14 +131,15 @@ export class WebRTCController {
                             // VoiceActivityDetection: true,
                         })
                         .then((sdpOffer: RTCSessionDescriptionInit) => {
-                            console.log('BBB 5');
+                            console.log('BBB 501', sdpOffer.type);
+                            console.log('BBB 502', sdpOffer.sdp);
                             this.connection
                                 ?.setLocalDescription(sdpOffer)
                                 .then(() => {
-                                    console.log('BBB 50');
+                                    console.log('BBB 53');
                                 })
                                 .catch((error: Error) => {
-                                    console.log('BBB 51', error);
+                                    console.log('BBB 54', error);
                                     reject(error.message);
                                 });
                         })
