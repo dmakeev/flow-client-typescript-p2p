@@ -57,6 +57,7 @@ export class WebRTCController {
     }
     callStarted() {
         this.outgoingIceCandidates.forEach((candidate) => {
+            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
             this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                 listener({ candidate });
             });
@@ -174,6 +175,7 @@ export class WebRTCController {
                     if (!event.candidate) {
                         return;
                     }
+                    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 22222');
                     this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                         listener({ candidate: event.candidate });
                     });

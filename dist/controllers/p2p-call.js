@@ -48,6 +48,7 @@ export class P2PCallController {
             this.eventListeners.get(P2PCallEventType.INCOMING)?.forEach((listener) => listener({ call: data.call }));
         });
         this.transport.addEventListener(SignalingEventType.HANGUP, (data) => {
+            this.call = undefined;
             this.eventListeners.get(P2PCallEventType.HANGUP)?.forEach((listener) => listener(data));
             this.webrtcController.closeConnection();
         });
