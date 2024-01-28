@@ -138,13 +138,13 @@ export class TransportController {
      * @returns {Promise<User>}
      */
     public async login(userIdentity: string, securityToken: string): Promise<{ user: User; iceServers: [] }> {
-        return new Promise((resolve: (data: { user: User; iceServers: [] }) => void, reject: (reason: string) => void) => {
+        return new Promise((resolve: (data: { user: User; iceServers: [] }) => void, reject: (reason: Error) => void) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (this.userId) {
-                reject('You are already logged in');
+                reject(new Error('You are already logged in'));
                 return;
             }
             this.socket.emit('/v1/user/login', { userIdentity, securityToken }, (data: TransportResponseLogin) => {
@@ -152,7 +152,7 @@ export class TransportController {
                     console.log(data);
                     console.log(data.reason);
                     console.log(data.reason ?? 'Unknown error');
-                    reject(data.reason ?? 'Unknown error');
+                    reject(new Error(data.reason ?? 'Unknown error'));
                     return;
                 }
                 this.userId = data.user.id;

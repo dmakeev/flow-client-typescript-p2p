@@ -1,6 +1,6 @@
 {
     "name": "flow-p2p",
-    "version": "0.0.22",
+    "version": "0.0.23",
     "description": "P2P calls for react native app",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
