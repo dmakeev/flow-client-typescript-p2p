@@ -101,7 +101,7 @@ export class WebRTCController {
                     console.log('BBB 70', event);
                     if (!event.candidate && !!this.connection) {
                         console.log('BBB 7');
-                        resolve(this.connection.localDescription);
+                        // resolve(this.connection.localDescription!);
                     }
                 });
                 this.connection
@@ -116,7 +116,8 @@ export class WebRTCController {
                     this.connection
                         ?.setLocalDescription(sdpOffer)
                         .then(() => {
-                        console.log('BBB 53');
+                        console.log('BBB 53', this.connection?.localDescription);
+                        resolve(this.connection?.localDescription);
                     })
                         .catch((error) => {
                         console.log('BBB 54', error);
