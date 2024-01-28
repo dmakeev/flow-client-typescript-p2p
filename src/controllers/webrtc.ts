@@ -68,7 +68,6 @@ export class WebRTCController {
 
     public callStarted(): void {
         this.outgoingIceCandidates.forEach((candidate: RTCIceCandidate) => {
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
             this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                 listener({ candidate });
             });
