@@ -88,9 +88,9 @@ export class WebRTCController {
                     reject('Failed to create RTCPeerConnection');
                     return;
                 }
-                //for (const track of this.localStream.getTracks()) {
-                //    this.connection.addTrack(track, this.localStream);
-                //}
+                for (const track of this.localStream.getTracks()) {
+                    this.connection.addTrack(track, this.localStream);
+                }
                 this.connection.addEventListener('track', (event) => {
                     this.eventListeners
                         .get(WebRTCEventType.REMOTE_STREAM)
