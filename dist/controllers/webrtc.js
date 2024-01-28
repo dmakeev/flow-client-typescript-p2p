@@ -102,6 +102,13 @@ export class WebRTCController {
                 this.connection.addEventListener('icegatheringstatechange', () => {
                     // console.log(this.connection?.iceGatheringState);
                 });
+                this.connection?.addEventListener('icecandidate', (event) => {
+                    console.log('BBB 6');
+                    if (!event.candidate && !!this.connection) {
+                        resolve(this.connection.localDescription);
+                    }
+                });
+                console.log('BBB 500');
                 this.connection
                     .createOffer({
                 //offerToReceiveAudio: true,
@@ -109,16 +116,23 @@ export class WebRTCController {
                 // VoiceActivityDetection: true,
                 })
                     .then((sdpOffer) => {
-                    console.log('BBB 5');
-                    this.connection?.setLocalDescription(sdpOffer);
-                    this.connection?.addEventListener('icecandidate', (event) => {
-                        console.log('BBB 6');
-                        if (!event.candidate && !!this.connection) {
-                            resolve(this.connection.localDescription);
-                        }
+                    console.log('BBB 501', sdpOffer.type);
+                    console.log('BBB 502', sdpOffer.sdp);
+                    this.connection
+                        ?.setLocalDescription(sdpOffer)
+                        .then(() => {
+                        console.log('BBB 53');
+                    })
+                        .catch((error) => {
+                        console.log('BBB 54', error);
+                        reject(error.message);
                     });
                 })
-                    .catch((error) => reject(error.message));
+                    .catch((error) => {
+                    console.log(error);
+                    reject(error.message);
+                });
+                console.log('BBB 55');
             })
                 .catch((error) => reject(error.message));
         });
