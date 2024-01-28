@@ -45,7 +45,7 @@ export class TransportController {
             if (!!this.socket) {
                 this.disconnect();
             }
-            this.socket = io(url, { path: '/signal/socket.io', transports: ['websocket'] });
+            this.socket = io(url, { path: '/signal/socket.io' /*transports: ['websocket'] */ });
             this.socket.on('connect', () => {
                 this.logController.log('Signaling socket is connected');
             });
@@ -56,7 +56,7 @@ export class TransportController {
             this.socket.on('connect_error', (error) => {
                 this.connected = false;
                 this.logController.log('Can`t connect to the signaling socket', error.message);
-                reject(error.message);
+                reject(error);
             });
             this.socket.on('/v1/user/connected', () => {
                 this.logController.log('Signaling socket is ready for use');
@@ -116,11 +116,8 @@ export class TransportController {
                 return;
             }
             this.socket.emit('/v1/user/login', { userIdentity, securityToken }, (data) => {
-                if (!data || !data.user) {
-                    console.log(data);
-                    console.log(data.reason);
-                    console.log(data.reason ?? 'Unknown error');
-                    reject(new Error(data.reason ?? 'Unknown error'));
+                if (!data || !!data.error || !data.user) {
+                    reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
                 this.userId = data.user.id;
@@ -137,12 +134,12 @@ export class TransportController {
     async logout() {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
-            this.socket.emit('/v1/user/logout', {}, (error) => {
-                if (!!error) {
-                    reject(error.reason ?? 'Unknown error');
+            this.socket.emit('/v1/user/logout', {}, (data) => {
+                if (!!data.error) {
+                    reject(new Error(data.error.reason));
                     return;
                 }
                 resolve();
@@ -156,16 +153,16 @@ export class TransportController {
     async startPairing() {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             this.socket.emit('/v1/pairing/start', {}, (data) => {
                 if (!!data.error) {
-                    reject(data.reason ?? 'Unknown error');
+                    reject(new Error(data.error.reason));
                     return;
                 }
                 resolve();
@@ -179,16 +176,16 @@ export class TransportController {
     async stopPairing() {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
-            this.socket.emit('/v1/pairing/stop', {}, (error) => {
-                if (!!error) {
-                    reject(error.reason ?? 'Unknown error');
+            this.socket.emit('/v1/pairing/stop', {}, (data) => {
+                if (!!data.error) {
+                    reject(new Error(data.error.reason));
                     return;
                 }
                 resolve();
@@ -207,16 +204,16 @@ export class TransportController {
     async call(calleeId, sdpOffer, audio, video) {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             this.socket.emit('/v1/p2p/start', { calleeId, sdpOffer, audio, video }, (data) => {
                 if (!!data.error || !data.call) {
-                    reject(data.error.reason ?? 'Unknown error');
+                    reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
                 resolve(data.call);
@@ -235,16 +232,16 @@ export class TransportController {
     async accept(callId, sdpAnswer, audio, video) {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             this.socket.emit('/v1/p2p/accept', { callId, sdpAnswer, audio, video }, (data) => {
                 if (!!data.error || !data.call) {
-                    reject(data.error.reason ?? 'Unknown error');
+                    reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
                     return;
                 }
                 resolve(data.call);
@@ -261,16 +258,16 @@ export class TransportController {
     async reject(callId, reason) {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
-            this.socket.emit('/v1/p2p/reject', { callId, reason }, (error) => {
-                if (!!error) {
-                    reject(error.reason ?? 'Unknown error');
+            this.socket.emit('/v1/p2p/reject', { callId, reason }, (data) => {
+                if (!!data.error) {
+                    reject(new Error(data.error.reason));
                     return;
                 }
                 resolve();
@@ -287,11 +284,11 @@ export class TransportController {
     async hangup(callId, reason) {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             this.socket.emit('/v1/p2p/hangup', { callId, reason });
@@ -308,16 +305,16 @@ export class TransportController {
     async reconnect(callId, sdpOffer) {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
-            this.socket.emit('/v1/p2p/reconnect', { callId, sdpOffer }, (error) => {
-                if (!!error || !callId) {
-                    reject(error.reason ?? 'Unknown error');
+            this.socket.emit('/v1/p2p/reconnect', { callId, sdpOffer }, (data) => {
+                if (!!data.error || !callId) {
+                    reject(new Error(data.error?.reason ?? 'Unknown error'));
                     return;
                 }
                 resolve();
@@ -334,16 +331,16 @@ export class TransportController {
     async acceptReconnect(callId, sdpAnswer) {
         return new Promise((resolve, reject) => {
             if (!this.socket) {
-                reject('Socket is not connected');
+                reject(new Error('Socket is not connected'));
                 return;
             }
             if (!this.userId) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
-            this.socket.emit('/v1/p2p/acept-reconnect', { callId, sdpAnswer }, (error) => {
-                if (!!error || !callId) {
-                    reject(error.reason ?? 'Unknown error');
+            this.socket.emit('/v1/p2p/acept-reconnect', { callId, sdpAnswer }, (data) => {
+                if (!!data.error || !callId) {
+                    reject(new Error(data.error?.reason ?? 'Unknown error'));
                     return;
                 }
                 resolve();

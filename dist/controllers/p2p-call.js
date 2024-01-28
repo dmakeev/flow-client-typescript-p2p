@@ -110,7 +110,7 @@ export class P2PCallController {
             })
                 .catch((error) => {
                 console.log(error);
-                reject(error.message);
+                reject(new Error(error.message));
             });
         });
     }
@@ -147,29 +147,24 @@ export class P2PCallController {
      * @returns {Promise<P2PCall>}
      */
     async startCall(calleeId, audio, video) {
-        console.log('AAA 1');
         return new Promise(async (resolve, reject) => {
-            console.log('AAA 2');
             if (!!this.webrtcController.hasConnection) {
-                reject('Another call is in progress, you should finish it first');
+                reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
-            console.log('AAA 3');
             const sdpOffer = await this.webrtcController.initConnection(audio, video);
-            console.log('AAA 4');
             this.transport
                 .call(calleeId, sdpOffer, audio, video)
                 .then((call) => {
-                console.log('AAA 5');
                 this.call = new P2PCall(call.id, call.caller, call.callee, P2PCallStatus.Pending);
                 resolve(this.call);
             })
-                .catch((reason) => {
-                reject(reason);
+                .catch((error) => {
+                reject(error);
             });
         });
     }
@@ -184,16 +179,16 @@ export class P2PCallController {
     async acceptCall(callId, audio, video) {
         return new Promise(async (resolve, reject) => {
             if (!!this.webrtcController.hasConnection) {
-                reject('Another call is in progress, you should finish it first');
+                reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             const incomingCall = this.incomingCalls.get(callId);
             if (!incomingCall) {
-                reject('Call was finished before accepting');
+                reject(new Error('Call was finished before accepting'));
                 return;
             }
             const sdpAnswer = await this.webrtcController.initConnectionAnswering(incomingCall.sdpOffer, audio, video);
@@ -204,8 +199,8 @@ export class P2PCallController {
                 this.incomingCalls.delete(callId);
                 resolve(this.call);
             })
-                .catch((reason) => {
-                reject(reason);
+                .catch((error) => {
+                reject(error);
             });
         });
     }
@@ -219,7 +214,7 @@ export class P2PCallController {
     async rejectCall(callId, rejectionReason) {
         return new Promise(async (resolve, reject) => {
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             this.incomingCalls.delete(callId);
@@ -230,10 +225,10 @@ export class P2PCallController {
                 this.webrtcController.closeConnection();
                 resolve();
             })
-                .catch((reason) => {
+                .catch((error) => {
                 this.call = undefined;
                 this.webrtcController.closeConnection();
-                reject(reason);
+                reject(error);
             });
         });
     }
@@ -246,11 +241,11 @@ export class P2PCallController {
     async hangupCall(hangupReason) {
         return new Promise(async (resolve, reject) => {
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             if (!this.call) {
-                reject('There is no call to reject');
+                reject(new Error('There is no call to reject'));
                 return;
             }
             this.incomingCalls.delete(this.call.id);
@@ -261,10 +256,10 @@ export class P2PCallController {
                 this.webrtcController.closeConnection();
                 resolve();
             })
-                .catch((reason) => {
+                .catch((error) => {
                 this.call = undefined;
                 this.webrtcController.closeConnection();
-                reject(reason);
+                reject(error);
             });
         });
     }

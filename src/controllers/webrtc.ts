@@ -64,18 +64,16 @@ export class WebRTCController {
     }
 
     public async initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription> {
-        return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (reason?: string) => void) => {
+        return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             }
-            console.log('BBB 1');
             WebRTC.mediaDevices
                 .getUserMedia({
                     audio: audio ? this.mediaConstraints.audio : false,
                     video: video ? this.mediaConstraints.video : false,
                 })
                 .then((stream: MediaStream) => {
-                    console.log('BBB 2');
                     this.localStream = stream;
                     setTimeout(() => {
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
@@ -88,16 +86,9 @@ export class WebRTCController {
                     if (!!this.connection) {
                         this.connection.close();
                     }
-                    console.log('BBB 3');
-                    try {
-                        this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
-                    } catch (e) {
-                        console.log(e);
-                    }
-                    console.log('BBB 4');
-
+                    this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                     if (!this.connection) {
-                        reject('Failed to create RTCPeerConnection');
+                        reject(new Error('Failed to create RTCPeerConnection'));
                         return;
                     }
                     for (const track of this.localStream.getTracks()) {
@@ -118,12 +109,10 @@ export class WebRTCController {
                     });
 
                     this.connection?.addEventListener('icecandidate', (event) => {
-                        console.log('BBB 6');
                         if (!event.candidate && !!this.connection) {
                             resolve(this.connection.localDescription!);
                         }
                     });
-                    console.log('BBB 500');
                     this.connection
                         .createOffer({
                             //offerToReceiveAudio: true,
@@ -140,21 +129,21 @@ export class WebRTCController {
                                 })
                                 .catch((error: Error) => {
                                     console.log('BBB 54', error);
-                                    reject(error.message);
+                                    reject(error);
                                 });
                         })
                         .catch((error: Error) => {
                             console.log(error);
-                            reject(error.message);
+                            reject(error);
                         });
                     console.log('BBB 55');
                 })
-                .catch((error: Error) => reject(error.message));
+                .catch((error: Error) => reject(error));
         });
     }
 
     public async initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription> {
-        return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (reason?: string) => void) => {
+        return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
             if (!!this.localStream) {
                 this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             }
@@ -177,13 +166,9 @@ export class WebRTCController {
                             this.connection.close();
                         } catch (error: unknown) {}
                     }
-                    try {
-                        this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
-                    } catch (e) {
-                        console.error(e);
-                    }
+                    this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                     if (!this.connection) {
-                        reject('Failed to create RTCPeerConnection');
+                        reject(new Error('Unable to create RTCPeerConnection'));
                         return;
                     }
                     for (const track of this.localStream.getTracks()) {
@@ -208,11 +193,11 @@ export class WebRTCController {
                                         }
                                     });
                                 })
-                                .catch((error: Error) => reject(error.message));
+                                .catch((error: Error) => reject(error));
                         })
                         .catch((error: Error) => {
                             console.warn(error);
-                            reject(error.message);
+                            reject(error);
                         });
 
                     this.connection.addEventListener('track', (event) => {
@@ -229,7 +214,7 @@ export class WebRTCController {
                         // console.log(this.connection?.iceGatheringState);
                     });
                 })
-                .catch((error: Error) => reject(error.message));
+                .catch((error: Error) => reject(error));
         });
     }
 

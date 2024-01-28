@@ -120,7 +120,7 @@ export class P2PCallController {
      * @returns {Promise<User>}
      */
     public async login(userIdentity: string, securityToken: string): Promise<User> {
-        return new Promise((resolve: (user: User) => void, reject: (reason?: string) => void) => {
+        return new Promise((resolve: (user: User) => void, reject: (error: Error) => void) => {
             this.userController
                 .login(userIdentity, securityToken)
                 .then((data: { user: User; iceServers: [] }) => {
@@ -129,7 +129,7 @@ export class P2PCallController {
                 })
                 .catch((error: Error) => {
                     console.log(error);
-                    reject(error.message);
+                    reject(new Error(error.message));
                 });
         });
     }
@@ -170,29 +170,24 @@ export class P2PCallController {
      * @returns {Promise<P2PCall>}
      */
     public async startCall(calleeId: string, audio: boolean, video: boolean): Promise<P2PCall> {
-        console.log('AAA 1');
-        return new Promise(async (resolve: (call: P2PCall) => void, reject: (reason: string) => void) => {
-            console.log('AAA 2');
+        return new Promise(async (resolve: (call: P2PCall) => void, reject: (error: Error) => void) => {
             if (!!this.webrtcController.hasConnection) {
-                reject('Another call is in progress, you should finish it first');
+                reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
-            console.log('AAA 3');
             const sdpOffer = await this.webrtcController.initConnection(audio, video);
-            console.log('AAA 4');
             this.transport
                 .call(calleeId, sdpOffer, audio, video)
                 .then((call: P2PCall) => {
-                    console.log('AAA 5');
                     this.call = new P2PCall(call.id, call.caller, call.callee, P2PCallStatus.Pending);
                     resolve(this.call);
                 })
-                .catch((reason: string) => {
-                    reject(reason);
+                .catch((error: Error) => {
+                    reject(error);
                 });
         });
     }
@@ -206,18 +201,18 @@ export class P2PCallController {
      * @returns {Promise<P2PCall>}
      */
     public async acceptCall(callId: string, audio: boolean, video: boolean): Promise<P2PCall> {
-        return new Promise(async (resolve: (call: P2PCall) => void, reject: (reason: string) => void) => {
+        return new Promise(async (resolve: (call: P2PCall) => void, reject: (error: Error) => void) => {
             if (!!this.webrtcController.hasConnection) {
-                reject('Another call is in progress, you should finish it first');
+                reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             const incomingCall = this.incomingCalls.get(callId);
             if (!incomingCall) {
-                reject('Call was finished before accepting');
+                reject(new Error('Call was finished before accepting'));
                 return;
             }
             const sdpAnswer = await this.webrtcController.initConnectionAnswering(incomingCall.sdpOffer, audio, video);
@@ -228,8 +223,8 @@ export class P2PCallController {
                     this.incomingCalls.delete(callId);
                     resolve(this.call);
                 })
-                .catch((reason: string) => {
-                    reject(reason);
+                .catch((error: Error) => {
+                    reject(error);
                 });
         });
     }
@@ -242,9 +237,9 @@ export class P2PCallController {
      * @returns {Promise<void>}
      */
     public async rejectCall(callId: string, rejectionReason: string): Promise<void> {
-        return new Promise(async (resolve: () => void, reject: (reason: string) => void) => {
+        return new Promise(async (resolve: () => void, reject: (error: Error) => void) => {
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             this.incomingCalls.delete(callId);
@@ -255,10 +250,10 @@ export class P2PCallController {
                     this.webrtcController.closeConnection();
                     resolve();
                 })
-                .catch((reason: string) => {
+                .catch((error: Error) => {
                     this.call = undefined;
                     this.webrtcController.closeConnection();
-                    reject(reason);
+                    reject(error);
                 });
         });
     }
@@ -270,13 +265,13 @@ export class P2PCallController {
      * @returns {Promise<void>}
      */
     public async hangupCall(hangupReason?: string): Promise<void> {
-        return new Promise(async (resolve: () => void, reject: (reason: string) => void) => {
+        return new Promise(async (resolve: () => void, reject: (error: Error) => void) => {
             if (!this.currentUser) {
-                reject('You should authenticate first');
+                reject(new Error('You should authenticate first'));
                 return;
             }
             if (!this.call) {
-                reject('There is no call to reject');
+                reject(new Error('There is no call to reject'));
                 return;
             }
             this.incomingCalls.delete(this.call.id);
@@ -287,10 +282,10 @@ export class P2PCallController {
                     this.webrtcController.closeConnection();
                     resolve();
                 })
-                .catch((reason: string) => {
+                .catch((error: Error) => {
                     this.call = undefined;
                     this.webrtcController.closeConnection();
-                    reject(reason);
+                    reject(error);
                 });
         });
     }
