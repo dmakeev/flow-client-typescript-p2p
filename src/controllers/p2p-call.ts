@@ -72,7 +72,6 @@ export class P2PCallController {
             this.eventListeners.get(P2PCallEventType.REMOTE_STREAM)?.forEach((listener) => listener(data));
         });
         this.transport.addEventListener(SignalingEventType.ACCEPTED, (data: { call: P2PCall; sdpAnswer: RTCSessionDescription }) => {
-            console.log('AAAAAAAAAAAAAAAA');
             this.webrtcController.callStarted();
             this.webrtcController.addAnswer(data.sdpAnswer);
         });
@@ -144,7 +143,6 @@ export class P2PCallController {
                     this.webrtcController.setIceServers(data.iceServers);
                 })
                 .catch((error: Error) => {
-                    console.log(error);
                     reject(new Error(error.message));
                 });
         });
@@ -231,9 +229,7 @@ export class P2PCallController {
                 reject(new Error('Call was finished before accepting'));
                 return;
             }
-            console.log('>>>>> AACCCCCEPT -3');
             const sdpAnswer = await this.webrtcController.initConnectionAnswering(incomingCall.sdpOffer, audio, video);
-            console.log('>>>>> AACCCCCEPT -2');
             this.transport
                 .accept(callId, sdpAnswer, audio, video)
                 .then((call: P2PCall) => {
