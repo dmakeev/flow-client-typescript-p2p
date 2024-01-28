@@ -199,6 +199,11 @@ export class WebRTCController {
                 for (const track of this.localStream.getTracks()) {
                     this.connection.addTrack(track, this.localStream);
                 }
+                this.connection?.addEventListener('icecandidate', (event) => {
+                    this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
+                        listener({ candidate: event.candidate });
+                    });
+                });
                 this.connection
                     .setRemoteDescription(sdpOffer)
                     .then(() => {
@@ -212,11 +217,7 @@ export class WebRTCController {
                     })
                         .then((sdpAnswer) => {
                         this.connection?.setLocalDescription(sdpAnswer);
-                        this.connection?.addEventListener('icecandidate', (event) => {
-                            if (!event.candidate && !!this.connection) {
-                                resolve(this.connection.localDescription);
-                            }
-                        });
+                        resolve(this.connection?.localDescription);
                     })
                         .catch((error) => reject(error));
                 })

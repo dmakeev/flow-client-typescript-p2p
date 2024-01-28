@@ -207,7 +207,9 @@ export class P2PCallController {
                 reject(new Error('Call was finished before accepting'));
                 return;
             }
+            console.log('>>>>> AACCCCCEPT -3');
             const sdpAnswer = await this.webrtcController.initConnectionAnswering(incomingCall.sdpOffer, audio, video);
+            console.log('>>>>> AACCCCCEPT -2');
             this.transport
                 .accept(callId, sdpAnswer, audio, video)
                 .then((call) => {

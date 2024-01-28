@@ -238,6 +238,7 @@ export class TransportController {
      * @returns {Promise<void>}               Call ID
      */
     async accept(callId, sdpAnswer, audio, video) {
+        console.log('>>>>> AACCCCCEPT -2');
         return new Promise((resolve, reject) => {
             if (!this.socket) {
                 reject(new Error('Socket is not connected'));
@@ -247,6 +248,7 @@ export class TransportController {
                 reject(new Error('You should authenticate first'));
                 return;
             }
+            console.log('>>>>> AACCCCCEPT -1');
             this.socket.emit('/v1/p2p/accept', { callId, sdpAnswer, audio, video }, (data) => {
                 if (!!data.error || !data.call) {
                     console.log('3', data);
@@ -348,7 +350,7 @@ export class TransportController {
                 reject(new Error('You should authenticate first'));
                 return;
             }
-            this.socket.emit('/v1/p2p/acept-reconnect', { callId, sdpAnswer }, (data) => {
+            this.socket.emit('/v1/p2p/accept-reconnect', { callId, sdpAnswer }, (data) => {
                 if (!!data.error || !callId) {
                     console.log('5', data);
                     reject(new Error(data.error?.reason ?? 'Unknown error'));
@@ -375,7 +377,7 @@ export class TransportController {
                 reject(new Error('You should authenticate first'));
                 return;
             }
-            this.socket.emit('/v1/p2p/acept-reconnect', { callId, candidate }, (data) => {
+            this.socket.emit('/v1/p2p/ice', { callId, candidate }, (data) => {
                 if (!!data.error || !callId) {
                     console.log('9', data);
                     reject(new Error(data.error?.reason ?? 'Unknown error'));
