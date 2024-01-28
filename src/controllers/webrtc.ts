@@ -101,11 +101,15 @@ export class WebRTCController {
                     });
 
                     this.connection.addEventListener('iceconnectionstatechange', () => {
-                        // console.log(this.connection?.iceConnectionState);
+                        console.log('A1', this.connection?.iceConnectionState);
                     });
 
                     this.connection.addEventListener('icegatheringstatechange', () => {
-                        // console.log(this.connection?.iceGatheringState);
+                        console.log('A2', this.connection?.iceGatheringState);
+                    });
+
+                    this.connection.addEventListener('negotiationneeded', () => {
+                        console.log('A3', this.connection?.iceGatheringState);
                     });
 
                     this.connection?.addEventListener('icecandidate', (event) => {
@@ -209,11 +213,15 @@ export class WebRTCController {
                     });
 
                     this.connection.addEventListener('iceconnectionstatechange', () => {
-                        // console.log(this.connection?.iceConnectionState);
+                        console.log('B1', this.connection?.iceConnectionState);
                     });
 
                     this.connection.addEventListener('icegatheringstatechange', () => {
-                        // console.log(this.connection?.iceGatheringState);
+                        console.log('B2', this.connection?.iceGatheringState);
+                    });
+
+                    this.connection.addEventListener('negotiationneeded', () => {
+                        console.log('B3', this.connection?.iceGatheringState);
                     });
                 })
                 .catch((error: Error) => reject(error));

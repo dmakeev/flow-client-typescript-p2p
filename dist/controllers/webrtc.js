@@ -88,10 +88,13 @@ export class WebRTCController {
                         ?.forEach((listener) => listener({ stream: event.streams[0] }));
                 });
                 this.connection.addEventListener('iceconnectionstatechange', () => {
-                    // console.log(this.connection?.iceConnectionState);
+                    console.log('A1', this.connection?.iceConnectionState);
                 });
                 this.connection.addEventListener('icegatheringstatechange', () => {
-                    // console.log(this.connection?.iceGatheringState);
+                    console.log('A2', this.connection?.iceGatheringState);
+                });
+                this.connection.addEventListener('negotiationneeded', () => {
+                    console.log('A3', this.connection?.iceGatheringState);
                 });
                 this.connection?.addEventListener('icecandidate', (event) => {
                     console.log('BBB 70', event);
@@ -192,10 +195,13 @@ export class WebRTCController {
                         ?.forEach((listener) => listener({ stream: event.streams[0] }));
                 });
                 this.connection.addEventListener('iceconnectionstatechange', () => {
-                    // console.log(this.connection?.iceConnectionState);
+                    console.log('B1', this.connection?.iceConnectionState);
                 });
                 this.connection.addEventListener('icegatheringstatechange', () => {
-                    // console.log(this.connection?.iceGatheringState);
+                    console.log('B2', this.connection?.iceGatheringState);
+                });
+                this.connection.addEventListener('negotiationneeded', () => {
+                    console.log('B3', this.connection?.iceGatheringState);
                 });
             })
                 .catch((error) => reject(error));
