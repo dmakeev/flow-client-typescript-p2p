@@ -150,6 +150,8 @@ export class TransportController {
             this.socket.emit('/v1/user/login', { userIdentity, securityToken }, (data: TransportResponseLogin) => {
                 if (!data || !data.user) {
                     console.log(data);
+                    console.log(data.reason);
+                    console.log(data.reason ?? 'Unknown error');
                     reject(data.reason ?? 'Unknown error');
                     return;
                 }
