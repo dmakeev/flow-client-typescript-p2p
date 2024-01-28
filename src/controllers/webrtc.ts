@@ -88,6 +88,7 @@ export class WebRTCController {
                     if (!!this.connection) {
                         this.connection.close();
                     }
+                    console.log('!!!!!!!!!!', this.iceServers);
                     this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                     if (!this.connection) {
                         reject(new Error('Failed to create RTCPeerConnection'));
@@ -179,6 +180,7 @@ export class WebRTCController {
                             this.connection.close();
                         } catch (error: unknown) {}
                     }
+                    console.log('!!!!!!!!!! 2', this.iceServers);
                     this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
                     if (!this.connection) {
                         reject(new Error('Unable to create RTCPeerConnection'));
