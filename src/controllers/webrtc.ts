@@ -147,6 +147,7 @@ export class WebRTCController {
                             console.log(error);
                             reject(error.message);
                         });
+                    console.log('BBB 55');
                 })
                 .catch((error: Error) => reject(error.message));
         });

@@ -15,7 +15,8 @@
         }
     },
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "prepush": "npm run build"
     },
     "repository": {
         "type": "git",
