@@ -286,7 +286,7 @@ export class P2PCallController {
                 return;
             }
             if (!this.call) {
-                reject(new Error('There is no call to reject'));
+                reject(new Error('There is no call to hangup'));
                 return;
             }
             this.incomingCalls.delete(this.call.id);
