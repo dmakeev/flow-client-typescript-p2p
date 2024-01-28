@@ -193,7 +193,6 @@ export class P2PCallController {
     async startCall(calleeId, audio, video) {
         return new Promise(async (resolve, reject) => {
             if (!!this.call) {
-                console.log(this.call);
                 reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
@@ -224,7 +223,6 @@ export class P2PCallController {
     async acceptCall(callId, audio, video) {
         return new Promise(async (resolve, reject) => {
             if (!!this.call) {
-                console.log(this.call);
                 reject(new Error('Another call is in progress, you should finish it first'));
                 return;
             }
