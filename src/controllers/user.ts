@@ -48,4 +48,15 @@ export class UserController {
                 });
         });
     }
+
+    /**
+     * Login user to the signaling server
+     *
+     * @param {User} user User ID
+     * @returns {Promise<User>}
+     */
+    public async setUser(user: User): Promise<{ iceServers: [] }> {
+        this._user = user;
+        return this.transport.setUserInfo(user);
+    }
 }

@@ -20,4 +20,13 @@ export declare class UserController {
      * @returns {Promise<void>}
      */
     logout(): Promise<void>;
+    /**
+     * Login user to the signaling server
+     *
+     * @param {User} user User ID
+     * @returns {Promise<User>}
+     */
+    setUser(user: User): Promise<{
+        iceServers: [];
+    }>;
 }

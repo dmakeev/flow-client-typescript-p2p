@@ -135,7 +135,7 @@ export class TransportController {
      *
      * @param {string} userIdentity User ID
      * @param {string} securityToken Any security token, used by the backend to authorize user
-     * @returns {Promise<User>}
+     * @returns {Promise<{ user: User; iceServers: [] }>}
      */
     public async login(userIdentity: string, securityToken: string): Promise<{ user: User; iceServers: [] }> {
         return new Promise((resolve: (data: { user: User; iceServers: [] }) => void, reject: (error: Error) => void) => {
@@ -180,6 +180,29 @@ export class TransportController {
                     return;
                 }
                 resolve();
+            });
+        });
+    }
+
+    /**
+     * Login user to the signaling server
+     *
+     * @param {User} userInfo User ID
+     * @returns {Promise<{iceServers: []}>}
+     */
+    public async setUserInfo(userInfo: User): Promise<{ iceServers: [] }> {
+        return new Promise((resolve: (data: { iceServers: [] }) => void, reject: (error: Error) => void) => {
+            if (!this.socket) {
+                reject(new Error('Socket is not connected'));
+                return;
+            }
+            this.socket.emit('/v1/user/set-user-info', { userInfo }, (data: { error?: UniError; iceServers?: [] }) => {
+                if (!data || !!data.error || !data.iceServers) {
+                    reject(!!data.error ? new Error(data.error.reason) : new Error('Unknown error'));
+                    return;
+                }
+                this.userId = userInfo.id;
+                resolve({ iceServers: data.iceServers ?? [] });
             });
         });
     }

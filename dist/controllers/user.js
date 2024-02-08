@@ -44,5 +44,15 @@ export class UserController {
             });
         });
     }
+    /**
+     * Login user to the signaling server
+     *
+     * @param {User} user User ID
+     * @returns {Promise<User>}
+     */
+    async setUser(user) {
+        this._user = user;
+        return this.transport.setUserInfo(user);
+    }
 }
 //# sourceMappingURL=user.js.map

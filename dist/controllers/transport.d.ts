@@ -40,7 +40,7 @@ export declare class TransportController {
      *
      * @param {string} userIdentity User ID
      * @param {string} securityToken Any security token, used by the backend to authorize user
-     * @returns {Promise<User>}
+     * @returns {Promise<{ user: User; iceServers: [] }>}
      */
     login(userIdentity: string, securityToken: string): Promise<{
         user: User;
@@ -52,6 +52,15 @@ export declare class TransportController {
      * @returns {Promise<void>}
      */
     logout(): Promise<void>;
+    /**
+     * Login user to the signaling server
+     *
+     * @param {User} userInfo User ID
+     * @returns {Promise<{iceServers: []}>}
+     */
+    setUserInfo(userInfo: User): Promise<{
+        iceServers: [];
+    }>;
     /**
      * Start pairing process
      *

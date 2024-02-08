@@ -73,6 +73,13 @@ export declare class P2PCallController {
      */
     logout(): Promise<void>;
     /**
+     * Set user explicitely
+     *
+     * @param {User}   user
+     * @returns {Promise<User>}
+     */
+    setUser(user: User): Promise<void>;
+    /**
      * Start pairing process
      *
      * @returns {Promise<void>}

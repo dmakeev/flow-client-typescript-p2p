@@ -167,6 +167,25 @@ export class P2PCallController {
         return this.userController.logout();
     }
     /**
+     * Set user explicitely
+     *
+     * @param {User}   user
+     * @returns {Promise<User>}
+     */
+    async setUser(user) {
+        return new Promise((resolve, reject) => {
+            this.userController
+                .setUser(user)
+                .then((data) => {
+                resolve();
+                this.webrtcController.setIceServers(data.iceServers);
+            })
+                .catch((error) => {
+                reject(new Error(error.message));
+            });
+        });
+    }
+    /**
      * Start pairing process
      *
      * @returns {Promise<void>}
