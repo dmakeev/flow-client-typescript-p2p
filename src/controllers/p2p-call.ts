@@ -198,12 +198,10 @@ export class P2PCallController {
             this.userController
                 .setUser(user)
                 .then((data: { iceServers: [] }) => {
-                    resolve();
                     this.webrtcController.setIceServers(data.iceServers);
+                    resolve();
                 })
-                .catch((error: Error) => {
-                    reject(new Error(error.message));
-                });
+                .catch((error: Error) => reject(error));
         });
     }
 
