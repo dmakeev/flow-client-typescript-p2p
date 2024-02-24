@@ -12,15 +12,14 @@ export var SignalingEventType;
     SignalingEventType["INCOMING_ICE"] = "incoming_ice";
 })(SignalingEventType || (SignalingEventType = {}));
 export class TransportController {
-    static instance;
     logController = LogController.Instance;
     eventListeners = new Map();
     connected = false;
     socket;
     userId;
-    static get Instance() {
-        return this.instance || (this.instance = new this());
-    }
+    //public static getInstance(instanceId: string): TransportController {
+    //    return this.instance || (this.instance = new this());
+    //}
     constructor() {
         for (const v of Object.values(SignalingEventType)) {
             this.eventListeners.set(v, new Set());

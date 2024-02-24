@@ -1,10 +1,13 @@
 import { User } from '../models';
 import { TransportController } from './transport';
 export class UserController {
-    transport = TransportController.Instance;
+    transport; // = TransportController.Instance;
     _user;
     get user() {
         return this._user;
+    }
+    setTransportController(transport) {
+        this.transport = transport;
     }
     /**
      * Login user to the signaling server
@@ -15,8 +18,7 @@ export class UserController {
      */
     async login(userIdentity, securityToken) {
         return new Promise((resolve, reject) => {
-            this.transport
-                .login(userIdentity, securityToken)
+            this.transport.login(userIdentity, securityToken)
                 .then((data) => {
                 this._user = data.user; // new User(user.id, userIdentity);
                 resolve(data);
@@ -33,8 +35,7 @@ export class UserController {
      */
     async logout() {
         return new Promise((resolve, reject) => {
-            this.transport
-                .logout()
+            this.transport.logout()
                 .then(() => {
                 this._user = undefined;
                 resolve();

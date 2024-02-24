@@ -1,6 +1,5 @@
 import { io, Socket } from 'socket.io-client';
 import type { P2PCall, UniError, User, UserPairInfo } from '../models';
-
 import { LogController } from './log';
 
 export enum SignalingEventType {
@@ -17,7 +16,6 @@ export enum SignalingEventType {
 export type SignalingEvent = (data?: any) => void;
 
 export class TransportController {
-    private static instance: TransportController;
     private readonly logController: LogController = LogController.Instance;
     private readonly eventListeners: Map<SignalingEventType, Set<SignalingEvent>> = new Map<SignalingEventType, Set<SignalingEvent>>();
 
@@ -25,9 +23,9 @@ export class TransportController {
     private socket?: Socket;
     private userId?: string;
 
-    public static get Instance(): TransportController {
-        return this.instance || (this.instance = new this());
-    }
+    //public static getInstance(instanceId: string): TransportController {
+    //    return this.instance || (this.instance = new this());
+    //}
 
     constructor() {
         for (const v of Object.values(SignalingEventType)) {

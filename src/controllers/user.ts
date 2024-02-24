@@ -2,11 +2,15 @@ import { User } from '../models';
 import { TransportController } from './transport';
 
 export class UserController {
-    private transport: TransportController = TransportController.Instance;
+    private transport?: TransportController; // = TransportController.Instance;
     private _user?: User;
 
     public get user(): User | undefined {
         return this._user;
+    }
+
+    public setTransportController(transport: TransportController): void {
+        this.transport = transport;
     }
 
     /**
@@ -18,8 +22,7 @@ export class UserController {
      */
     public async login(userIdentity: string, securityToken: string): Promise<{ user: User; iceServers: [] }> {
         return new Promise((resolve: (daata: { user: User; iceServers: [] }) => void, reject: (reason: string) => void) => {
-            this.transport
-                .login(userIdentity, securityToken)
+            this.transport!.login(userIdentity, securityToken)
                 .then((data: { user: User; iceServers: [] }) => {
                     this._user = data.user; // new User(user.id, userIdentity);
                     resolve(data);
@@ -37,8 +40,7 @@ export class UserController {
      */
     public async logout(): Promise<void> {
         return new Promise((resolve: (value: void) => void, reject: (reason: string) => void) => {
-            this.transport
-                .logout()
+            this.transport!.logout()
                 .then(() => {
                     this._user = undefined;
                     resolve();
@@ -57,6 +59,6 @@ export class UserController {
      */
     public async setUser(user: User): Promise<{ iceServers: [] }> {
         this._user = user;
-        return this.transport.setUserInfo(user);
+        return this.transport!.setUserInfo(user);
     }
 }

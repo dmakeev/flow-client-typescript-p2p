@@ -23,7 +23,7 @@ type IncomingCall = {
 
 export class P2PCallController {
     private call?: P2PCall;
-    private readonly transport: TransportController = TransportController.Instance;
+    private readonly transport: TransportController = new TransportController();
     private readonly eventListeners: Map<P2PCallEventType, Set<P2PCallEvent>> = new Map<P2PCallEventType, Set<P2PCallEvent>>();
     private readonly userController: UserController = new UserController();
     private readonly webrtcController: WebRTCController = new WebRTCController();
@@ -67,6 +67,8 @@ export class P2PCallController {
     }
 
     constructor() {
+        this.userController.setTransportController(this.transport);
+
         for (const v of Object.values(P2PCallEventType)) {
             this.eventListeners.set(v, new Set());
         }

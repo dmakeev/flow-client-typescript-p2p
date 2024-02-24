@@ -15,7 +15,7 @@ export var P2PCallEventType;
 })(P2PCallEventType || (P2PCallEventType = {}));
 export class P2PCallController {
     call;
-    transport = TransportController.Instance;
+    transport = new TransportController();
     eventListeners = new Map();
     userController = new UserController();
     webrtcController = new WebRTCController();
@@ -54,6 +54,7 @@ export class P2PCallController {
         return this.instance || (this.instance = new this());
     }
     constructor() {
+        this.userController.setTransportController(this.transport);
         for (const v of Object.values(P2PCallEventType)) {
             this.eventListeners.set(v, new Set());
         }
@@ -177,12 +178,10 @@ export class P2PCallController {
             this.userController
                 .setUser(user)
                 .then((data) => {
-                resolve();
                 this.webrtcController.setIceServers(data.iceServers);
+                resolve();
             })
-                .catch((error) => {
-                reject(new Error(error.message));
-            });
+                .catch((error) => reject(error));
         });
     }
     /**

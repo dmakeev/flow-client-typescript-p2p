@@ -11,13 +11,11 @@ export declare enum SignalingEventType {
 }
 export type SignalingEvent = (data?: any) => void;
 export declare class TransportController {
-    private static instance;
     private readonly logController;
     private readonly eventListeners;
     private connected;
     private socket?;
     private userId?;
-    static get Instance(): TransportController;
     constructor();
     get hasConnection(): boolean;
     addEventListener(type: SignalingEventType, listener: SignalingEvent): void;
