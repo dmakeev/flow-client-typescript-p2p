@@ -226,6 +226,26 @@ export class P2PCallController {
     }
 
     /**
+     * Reject the pair request - no call will be started
+     *
+     * @param {string} pairId
+     * @param {string?} hangupReason     Optianl reason, will be delivered to caller
+     * @returns {Promise<void>}
+     */
+    public async rejectPair(pairId: string, hangupReason?: string): Promise<void> {
+        return new Promise(async (resolve: () => void, reject: (error: Error) => void) => {
+            if (!this.currentUser) {
+                reject(new Error('You should authenticate first'));
+                return;
+            }
+            this.transport
+                .rejectPair(pairId, hangupReason)
+                .then(() => resolve())
+                .catch((error: Error) => reject(error));
+        });
+    }
+
+    /**
      * Start a new call
      *
      * @param {string}  calleeId  Id of user to call to

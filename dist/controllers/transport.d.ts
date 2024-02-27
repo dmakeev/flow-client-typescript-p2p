@@ -65,10 +65,18 @@ export declare class TransportController {
      */
     startPairing(): Promise<void>;
     /**
-     * Start pairing process
+     * Stop pairing process
      *
      */
     stopPairing(): Promise<void>;
+    /**
+     * Reject the incoming call
+     *
+     * @param {string}  callId  User ID to call to
+     * @param {string?} reason  Optional reason of rejecting the call - will be delivered to caller's device
+     * @returns {Promise<void>}
+     */
+    rejectPair(pairId: string, reason?: string): Promise<void>;
     /**
      * Start new call
      *

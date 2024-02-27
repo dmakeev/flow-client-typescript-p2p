@@ -196,7 +196,7 @@ export class TransportController {
         });
     }
     /**
-     * Start pairing process
+     * Stop pairing process
      *
      */
     async stopPairing() {
@@ -210,6 +210,32 @@ export class TransportController {
                 return;
             }
             this.socket.emit('/v1/pairing/stop', {}, (data) => {
+                if (!!data.error) {
+                    reject(new Error(data.error.reason));
+                    return;
+                }
+                resolve();
+            });
+        });
+    }
+    /**
+     * Reject the incoming call
+     *
+     * @param {string}  callId  User ID to call to
+     * @param {string?} reason  Optional reason of rejecting the call - will be delivered to caller's device
+     * @returns {Promise<void>}
+     */
+    async rejectPair(pairId, reason) {
+        return new Promise((resolve, reject) => {
+            if (!this.socket) {
+                reject(new Error('Socket is not connected'));
+                return;
+            }
+            if (!this.userId) {
+                reject(new Error('You should authenticate first'));
+                return;
+            }
+            this.socket.emit('/v1/pairing/reject', { pairId, reason }, (data) => {
                 if (!!data.error) {
                     reject(new Error(data.error.reason));
                     return;

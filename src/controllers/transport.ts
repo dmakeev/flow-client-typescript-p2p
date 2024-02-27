@@ -230,7 +230,7 @@ export class TransportController {
     }
 
     /**
-     * Start pairing process
+     * Stop pairing process
      *
      */
     public async stopPairing(): Promise<void> {
@@ -244,6 +244,33 @@ export class TransportController {
                 return;
             }
             this.socket.emit('/v1/pairing/stop', {}, (data: { error?: UniError }) => {
+                if (!!data.error) {
+                    reject(new Error(data.error.reason));
+                    return;
+                }
+                resolve();
+            });
+        });
+    }
+
+    /**
+     * Reject the incoming call
+     *
+     * @param {string}  callId  User ID to call to
+     * @param {string?} reason  Optional reason of rejecting the call - will be delivered to caller's device
+     * @returns {Promise<void>}
+     */
+    public async rejectPair(pairId: string, reason?: string): Promise<void> {
+        return new Promise((resolve: (value: void) => void, reject: (error: Error) => void) => {
+            if (!this.socket) {
+                reject(new Error('Socket is not connected'));
+                return;
+            }
+            if (!this.userId) {
+                reject(new Error('You should authenticate first'));
+                return;
+            }
+            this.socket.emit('/v1/pairing/reject', { pairId, reason }, (data: { error?: UniError }) => {
                 if (!!data.error) {
                     reject(new Error(data.error.reason));
                     return;

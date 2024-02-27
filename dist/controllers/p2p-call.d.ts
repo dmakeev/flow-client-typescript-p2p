@@ -92,6 +92,14 @@ export declare class P2PCallController {
      */
     stopPairing(): Promise<void>;
     /**
+     * Reject the pair request - no call will be started
+     *
+     * @param {string} pairId
+     * @param {string?} hangupReason     Optianl reason, will be delivered to caller
+     * @returns {Promise<void>}
+     */
+    rejectPair(pairId: string, hangupReason?: string): Promise<void>;
+    /**
      * Start a new call
      *
      * @param {string}  calleeId  Id of user to call to
