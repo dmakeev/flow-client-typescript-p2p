@@ -103,7 +103,13 @@ export class WebRTCController {
                 if (!!this.connection) {
                     this.connection.close();
                 }
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
                 this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                console.log('***************************************************************');
                 if (!this.connection) {
                     reject(new Error('Failed to create RTCPeerConnection'));
                     return;
@@ -187,7 +193,13 @@ export class WebRTCController {
                     }
                     catch (error) { }
                 }
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
+                console.log('***************************************************************', this.iceServers);
                 this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                console.log('***************************************************************');
                 if (!this.connection) {
                     reject(new Error('Unable to create RTCPeerConnection'));
                     return;
