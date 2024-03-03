@@ -27,6 +27,7 @@ export function injectWebRTC(WebRTCWrapper) {
     console.log('###############################################################################');
     console.log('###############################################################################');
     WebRTC = WebRTCWrapper;
+    console.log(WebRTC);
 }
 export var WebRTCEventType;
 (function (WebRTCEventType) {
@@ -66,7 +67,8 @@ export class WebRTCController {
         this.eventListeners.get(type)?.delete(listener);
     }
     setIceServers(iceServers) {
-        this.iceServers = iceServers;
+        console.log(iceServers);
+        this.iceServers = [{ urls: 'stun:139.59.128.234:3452' }]; //iceServers;
     }
     callStarted() {
         this.outgoingIceCandidates.forEach((candidate) => {

@@ -30,6 +30,7 @@ export function injectWebRTC(WebRTCWrapper: any) {
     console.log('###############################################################################');
     console.log('###############################################################################');
     WebRTC = WebRTCWrapper;
+    console.log(WebRTC);
 }
 
 export enum WebRTCEventType {
@@ -43,7 +44,7 @@ export type WebRTCEvent = (data?: any) => void;
 
 export class WebRTCController {
     private readonly eventListeners: Map<WebRTCEventType, Set<WebRTCEvent>> = new Map<WebRTCEventType, Set<WebRTCEvent>>();
-    private iceServers: [] = [];
+    private iceServers: any[] = [];
     private connection?: RTCPeerConnection;
     private localStream?: MediaStream;
     // private incomingIceCandidates: RTCIceCandidate[] = [];
@@ -77,7 +78,8 @@ export class WebRTCController {
     }
 
     public setIceServers(iceServers: []): void {
-        this.iceServers = iceServers;
+        console.log(iceServers);
+        this.iceServers = [{ urls: 'stun:139.59.128.234:3452' }]; //iceServers;
     }
 
     public callStarted(): void {
