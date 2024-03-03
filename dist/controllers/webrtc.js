@@ -107,8 +107,13 @@ export class WebRTCController {
                 console.log('***************************************************************', this.iceServers);
                 console.log('***************************************************************', this.iceServers);
                 console.log('***************************************************************', this.iceServers);
-                console.log('***************************************************************', this.iceServers);
-                this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                console.log('***************************************************************', WebRTC.RTCPeerConnection);
+                try {
+                    this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                }
+                catch (error) {
+                    console.log(error);
+                }
                 console.log('***************************************************************');
                 if (!this.connection) {
                     reject(new Error('Failed to create RTCPeerConnection'));
@@ -198,7 +203,13 @@ export class WebRTCController {
                 console.log('***************************************************************', this.iceServers);
                 console.log('***************************************************************', this.iceServers);
                 console.log('***************************************************************', this.iceServers);
-                this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                console.log('***************************************************************', WebRTC.RTCPeerConnection);
+                try {
+                    this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                }
+                catch (error) {
+                    console.log(error);
+                }
                 console.log('***************************************************************');
                 if (!this.connection) {
                     reject(new Error('Unable to create RTCPeerConnection'));
