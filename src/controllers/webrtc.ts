@@ -125,7 +125,13 @@ export class WebRTCController {
                     console.log('***************************************************************', this.iceServers);
                     console.log('***************************************************************', WebRTC.RTCPeerConnection);
                     try {
-                        this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                        this.connection = new WebRTC.RTCPeerConnection({
+                            iceServers: [
+                                {
+                                    urls: ['stun:stun.l.google.com:19302'],
+                                },
+                            ],
+                        }).catch((error: Error) => console.log(error));
                     } catch (error: any) {
                         console.log(error);
                     }
@@ -224,7 +230,13 @@ export class WebRTCController {
                     console.log('***************************************************************', this.iceServers);
                     console.log('***************************************************************', WebRTC.RTCPeerConnection);
                     try {
-                        this.connection = new WebRTC.RTCPeerConnection({ iceServers: this.iceServers });
+                        this.connection = new WebRTC.RTCPeerConnection({
+                            iceServers: [
+                                {
+                                    urls: ['stun:stun.l.google.com:19302'],
+                                },
+                            ],
+                        }).catch((error: Error) => console.log(error));
                     } catch (error: any) {
                         console.log(error);
                     }
