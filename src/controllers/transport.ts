@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import * as WebRTC from 'react-native-webrtc';
 import type { P2PCall, UniError, User, UserPairInfo } from '../models';
 import { LogController } from './log';
 
@@ -87,15 +88,15 @@ export class TransportController {
                 this.eventListeners.get(SignalingEventType.PAIRING_CANCELLED)?.forEach((listener) => listener({ pair: data.pair }));
             });
 
-            this.socket.on('/v1/p2p/incoming', (data: { call: P2PCall; sdpOffer: RTCSessionDescription }) => {
+            this.socket.on('/v1/p2p/incoming', (data: { call: P2PCall; sdpOffer: WebRTC.RTCSessionDescription }) => {
                 this.eventListeners
                     .get(SignalingEventType.INCOMING)
-                    ?.forEach((listener: (data: { call: P2PCall; sdpOffer: RTCSessionDescription }) => void) =>
+                    ?.forEach((listener: (data: { call: P2PCall; sdpOffer: WebRTC.RTCSessionDescription }) => void) =>
                         listener({ call: data.call, sdpOffer: data.sdpOffer })
                     );
             });
 
-            this.socket.on('/v1/p2p/accepted', (data: { callId: string; sdpAnswer: RTCSessionDescription }) => {
+            this.socket.on('/v1/p2p/accepted', (data: { callId: string; sdpAnswer: WebRTC.RTCSessionDescription }) => {
                 this.eventListeners
                     .get(SignalingEventType.ACCEPTED)
                     ?.forEach((listener) => listener({ callId: data.callId, sdpAnswer: data.sdpAnswer }));
@@ -105,10 +106,10 @@ export class TransportController {
                 this.eventListeners.get(SignalingEventType.HANGUP)?.forEach((listener) => listener({ callId: data.callId }));
             });
 
-            this.socket.on('/v1/p2p/incoming_ice', (data: { callId: string; candidate: RTCIceCandidate }) => {
+            this.socket.on('/v1/p2p/incoming_ice', (data: { callId: string; candidate: WebRTC.RTCIceCandidate }) => {
                 this.eventListeners
                     .get(SignalingEventType.INCOMING_ICE)
-                    ?.forEach((listener: (data: { callId: string; candidate: RTCIceCandidate }) => void) =>
+                    ?.forEach((listener: (data: { callId: string; candidate: WebRTC.RTCIceCandidate }) => void) =>
                         listener({ callId: data.callId, candidate: data.candidate })
                     );
             });
@@ -289,7 +290,7 @@ export class TransportController {
      * @param {boolean}               video     If video should be enabled
      * @returns {Promise<string>}               Call ID
      */
-    public async call(calleeId: string, sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall> {
+    public async call(calleeId: string, sdpOffer: WebRTC.RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall> {
         return new Promise((resolve: (call: P2PCall) => void, reject: (error: Error) => void) => {
             if (!this.socket) {
                 reject(new Error('Socket is not connected'));
@@ -318,7 +319,7 @@ export class TransportController {
      * @param {boolean}               video     If video should be enabled
      * @returns {Promise<void>}               Call ID
      */
-    public async accept(callId: string, sdpAnswer: RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall> {
+    public async accept(callId: string, sdpAnswer: WebRTC.RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall> {
         return new Promise((resolve: (call: P2PCall) => void, reject: (error: Error) => void) => {
             if (!this.socket) {
                 reject(new Error('Socket is not connected'));
@@ -394,7 +395,7 @@ export class TransportController {
      * @param {RTCSessionDescription} sdpOffer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
-    public async reconnect(callId: string, sdpOffer: RTCSessionDescription): Promise<void> {
+    public async reconnect(callId: string, sdpOffer: WebRTC.RTCSessionDescription): Promise<void> {
         return new Promise((resolve: (value: void) => void, reject: (error: Error) => void) => {
             if (!this.socket) {
                 reject(new Error('Socket is not connected'));
@@ -421,7 +422,7 @@ export class TransportController {
      * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
-    public async acceptReconnect(callId: string, sdpAnswer: RTCSessionDescription): Promise<void> {
+    public async acceptReconnect(callId: string, sdpAnswer: WebRTC.RTCSessionDescription): Promise<void> {
         return new Promise((resolve: (value: void) => void, reject: (error: Error) => void) => {
             if (!this.socket) {
                 reject(new Error('Socket is not connected'));
@@ -445,10 +446,10 @@ export class TransportController {
      * Send ICE candidate to another user
      *
      * @param {string}                callId  User ID to call to
-     * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
+     * @param {RTCIceCandidate} sdpAnswer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
-    public async sendIceCandidate(callId: string, candidate: RTCIceCandidate): Promise<void> {
+    public async sendIceCandidate(callId: string, candidate: WebRTC.RTCIceCandidate): Promise<void> {
         return new Promise((resolve: (value: void) => void, reject: (error: Error) => void) => {
             if (!this.socket) {
                 reject(new Error('Socket is not connected'));

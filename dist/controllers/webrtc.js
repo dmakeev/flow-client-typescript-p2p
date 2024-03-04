@@ -13,7 +13,8 @@ if (typeof localStorage) {
 */
 // import { Platform } from 'react-native';
 // import { request, PERMISSIONS } from 'react-native-permissions';
-let WebRTC;
+//let WebRTC: any;
+import * as WebRTC from 'react-native-webrtc';
 console.log('????????????????????????????????????????????????????????????????????????');
 console.log('????????????????????????????????????????????????????????????????????????');
 console.log('????????????????????????????????????????????????????????????????????????');
@@ -26,8 +27,8 @@ export function injectWebRTC(WebRTCWrapper) {
     console.log('###############################################################################');
     console.log('###############################################################################');
     console.log('###############################################################################');
-    WebRTC = WebRTCWrapper;
-    console.log(WebRTC);
+    //WebRTC = WebRTCWrapper;
+    console.log(WebRTCWrapper);
 }
 export var WebRTCEventType;
 (function (WebRTCEventType) {
@@ -117,7 +118,7 @@ export class WebRTCController {
                                 urls: ['stun:stun.l.google.com:19302'],
                             },
                         ],
-                    }).catch((error) => console.log(error));
+                    });
                 }
                 catch (error) {
                     console.log(error);
@@ -130,25 +131,31 @@ export class WebRTCController {
                 for (const track of this.localStream.getTracks()) {
                     this.connection.addTrack(track, this.localStream);
                 }
-                this.connection.addEventListener('track', (event) => {
+                /*
+                this.connection.addEventListener('track', (event: any) => {
                     this.eventListeners
                         .get(WebRTCEventType.REMOTE_STREAM)
                         ?.forEach((listener) => listener({ stream: event.streams[0] }));
                 });
+
                 this.connection.addEventListener('iceconnectionstatechange', () => {
                     // console.log('ICE connection state', this.connection?.iceConnectionState);
                 });
+
                 this.connection.addEventListener('icegatheringstatechange', () => {
                     // console.log('ICE gathering state', this.connection?.iceGatheringState);
                 });
+
                 this.connection.addEventListener('negotiationneeded', () => {
                     // console.log('Negotiation needed');
                 });
-                this.connection?.addEventListener('icecandidate', (event) => {
+
+                this.connection?.addEventListener('icecandidate', (event: any) => {
                     if (event.candidate) {
-                        this.outgoingIceCandidates.push(event.candidate);
+                        this.outgoingIceCandidates.push(event.candidate!);
                     }
                 });
+                */
                 this.connection
                     .createOffer({
                 //offerToReceiveAudio: true,
@@ -158,16 +165,10 @@ export class WebRTCController {
                     .then((sdpOffer) => {
                     this.connection
                         ?.setLocalDescription(sdpOffer)
-                        .then(() => {
-                        resolve(this.connection?.localDescription);
-                    })
-                        .catch((error) => {
-                        reject(error);
-                    });
+                        .then(() => resolve(this.connection?.localDescription))
+                        .catch((error) => reject(error));
                 })
-                    .catch((error) => {
-                    reject(error);
-                });
+                    .catch((error) => reject(error));
             })
                 .catch((error) => reject(error));
             //})
@@ -219,7 +220,7 @@ export class WebRTCController {
                                 urls: ['stun:stun.l.google.com:19302'],
                             },
                         ],
-                    }).catch((error) => console.log(error));
+                    });
                 }
                 catch (error) {
                     console.log(error);
@@ -232,7 +233,8 @@ export class WebRTCController {
                 for (const track of this.localStream.getTracks()) {
                     this.connection.addTrack(track, this.localStream);
                 }
-                this.connection?.addEventListener('icecandidate', (event) => {
+                /*
+                this.connection?.addEventListener('icecandidate', (event: any) => {
                     if (!event.candidate) {
                         return;
                     }
@@ -240,17 +242,13 @@ export class WebRTCController {
                         listener({ candidate: event.candidate });
                     });
                 });
+                */
                 this.connection
                     .setRemoteDescription(sdpOffer)
                     .then(() => {
                     this.connection
-                        ?.createAnswer({
-                    //mandatory: {
-                    //offerToReceiveAudio: true,
-                    //offerToReceiveVideo: true,
-                    //VoiceActivityDetection: true,
-                    // },
-                    })
+                        ?.createAnswer //{
+                    ()
                         .then((sdpAnswer) => {
                         this.connection
                             ?.setLocalDescription(sdpAnswer)
@@ -265,20 +263,25 @@ export class WebRTCController {
                     console.warn(error);
                     reject(error);
                 });
-                this.connection.addEventListener('track', (event) => {
+                /*
+                this.connection.addEventListener('track', (event: any) => {
                     this.eventListeners
                         .get(WebRTCEventType.REMOTE_STREAM)
                         ?.forEach((listener) => listener({ stream: event.streams[0] }));
                 });
+
                 this.connection.addEventListener('iceconnectionstatechange', () => {
                     // console.log('ICE connection state', this.connection?.iceConnectionState);
                 });
+
                 this.connection.addEventListener('icegatheringstatechange', () => {
                     // console.log('ICE gathering state', this.connection?.iceGatheringState);
                 });
+
                 this.connection.addEventListener('negotiationneeded', () => {
                     // console.log('Negotiation needed');
                 });
+                */
             })
                 .catch((error) => reject(error));
             //})

@@ -14,7 +14,8 @@ if (typeof localStorage) {
 // import { Platform } from 'react-native';
 // import { request, PERMISSIONS } from 'react-native-permissions';
 
-let WebRTC: any;
+//let WebRTC: any;
+import * as WebRTC from 'react-native-webrtc';
 
 console.log('????????????????????????????????????????????????????????????????????????');
 console.log('????????????????????????????????????????????????????????????????????????');
@@ -29,8 +30,8 @@ export function injectWebRTC(WebRTCWrapper: any) {
     console.log('###############################################################################');
     console.log('###############################################################################');
     console.log('###############################################################################');
-    WebRTC = WebRTCWrapper;
-    console.log(WebRTC);
+    //WebRTC = WebRTCWrapper;
+    console.log(WebRTCWrapper);
 }
 
 export enum WebRTCEventType {
@@ -45,10 +46,10 @@ export type WebRTCEvent = (data?: any) => void;
 export class WebRTCController {
     private readonly eventListeners: Map<WebRTCEventType, Set<WebRTCEvent>> = new Map<WebRTCEventType, Set<WebRTCEvent>>();
     private iceServers: any[] = [];
-    private connection?: RTCPeerConnection;
-    private localStream?: MediaStream;
+    private connection?: WebRTC.RTCPeerConnection;
+    private localStream?: WebRTC.MediaStream;
     // private incomingIceCandidates: RTCIceCandidate[] = [];
-    private outgoingIceCandidates: RTCIceCandidate[] = [];
+    private outgoingIceCandidates: WebRTC.RTCIceCandidate[] = [];
     //private videoStream?: MediaStream;
     private mediaConstraints = {
         audio: true,
@@ -83,7 +84,7 @@ export class WebRTCController {
     }
 
     public callStarted(): void {
-        this.outgoingIceCandidates.forEach((candidate: RTCIceCandidate) => {
+        this.outgoingIceCandidates.forEach((candidate: WebRTC.RTCIceCandidate) => {
             this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                 listener({ candidate });
             });
@@ -91,11 +92,11 @@ export class WebRTCController {
         this.outgoingIceCandidates.length = 0;
     }
 
-    public async initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription> {
+    public async initConnection(audio: boolean, video: boolean): Promise<WebRTC.RTCSessionDescription> {
         this.outgoingIceCandidates.length = 0;
-        return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
+        return new Promise((resolve: (sdpAnswer: WebRTC.RTCSessionDescription) => void, reject: (error: Error) => void) => {
             if (!!this.localStream) {
-                this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+                this.localStream.getTracks().forEach((track: WebRTC.MediaStreamTrack) => track.stop());
             }
             //request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA)
             //    .then((result) => {
@@ -106,7 +107,7 @@ export class WebRTCController {
                     audio: audio ? this.mediaConstraints.audio : false,
                     video: video ? this.mediaConstraints.video : false,
                 })
-                .then((stream: MediaStream) => {
+                .then((stream: WebRTC.MediaStream) => {
                     this.localStream = stream;
                     setTimeout(() => {
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
@@ -131,7 +132,7 @@ export class WebRTCController {
                                     urls: ['stun:stun.l.google.com:19302'],
                                 },
                             ],
-                        }).catch((error: Error) => console.log(error));
+                        });
                     } catch (error: any) {
                         console.log(error);
                     }
@@ -143,7 +144,8 @@ export class WebRTCController {
                     for (const track of this.localStream.getTracks()) {
                         this.connection.addTrack(track, this.localStream);
                     }
-                    this.connection.addEventListener('track', (event) => {
+                    /*
+                    this.connection.addEventListener('track', (event: any) => {
                         this.eventListeners
                             .get(WebRTCEventType.REMOTE_STREAM)
                             ?.forEach((listener) => listener({ stream: event.streams[0] }));
@@ -161,30 +163,25 @@ export class WebRTCController {
                         // console.log('Negotiation needed');
                     });
 
-                    this.connection?.addEventListener('icecandidate', (event) => {
+                    this.connection?.addEventListener('icecandidate', (event: any) => {
                         if (event.candidate) {
                             this.outgoingIceCandidates.push(event.candidate!);
                         }
                     });
+                    */
                     this.connection
                         .createOffer({
                             //offerToReceiveAudio: true,
                             //offerToReceiveVideo: true,
                             // VoiceActivityDetection: true,
                         })
-                        .then((sdpOffer: RTCSessionDescriptionInit) => {
+                        .then((sdpOffer: WebRTC.RTCSessionDescription) => {
                             this.connection
                                 ?.setLocalDescription(sdpOffer)
-                                .then(() => {
-                                    resolve(this.connection?.localDescription!);
-                                })
-                                .catch((error: Error) => {
-                                    reject(error);
-                                });
+                                .then(() => resolve(this.connection?.localDescription!))
+                                .catch((error: Error) => reject(error));
                         })
-                        .catch((error: Error) => {
-                            reject(error);
-                        });
+                        .catch((error: Error) => reject(error));
                 })
                 .catch((error: Error) => reject(error));
             //})
@@ -194,11 +191,15 @@ export class WebRTCController {
         });
     }
 
-    public async initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription> {
+    public async initConnectionAnswering(
+        sdpOffer: WebRTC.RTCSessionDescription,
+        audio: boolean,
+        video: boolean
+    ): Promise<WebRTC.RTCSessionDescription> {
         this.outgoingIceCandidates.length = 0;
-        return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
+        return new Promise((resolve: (sdpAnswer: WebRTC.RTCSessionDescription) => void, reject: (error: Error) => void) => {
             if (!!this.localStream) {
-                this.localStream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+                this.localStream.getTracks().forEach((track: WebRTC.MediaStreamTrack) => track.stop());
             }
             //request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA)
             //    .then((result) => {
@@ -209,7 +210,7 @@ export class WebRTCController {
                     audio: audio ? this.mediaConstraints.audio : false,
                     video: video ? this.mediaConstraints.video : false,
                 })
-                .then((stream: MediaStream) => {
+                .then((stream: WebRTC.MediaStream) => {
                     this.localStream = stream;
                     setTimeout(() => {
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
@@ -236,7 +237,7 @@ export class WebRTCController {
                                     urls: ['stun:stun.l.google.com:19302'],
                                 },
                             ],
-                        }).catch((error: Error) => console.log(error));
+                        });
                     } catch (error: any) {
                         console.log(error);
                     }
@@ -249,7 +250,8 @@ export class WebRTCController {
                         this.connection.addTrack(track, this.localStream);
                     }
 
-                    this.connection?.addEventListener('icecandidate', (event) => {
+                    /*
+                    this.connection?.addEventListener('icecandidate', (event: any) => {
                         if (!event.candidate) {
                             return;
                         }
@@ -257,19 +259,21 @@ export class WebRTCController {
                             listener({ candidate: event.candidate });
                         });
                     });
+                    */
 
                     this.connection
                         .setRemoteDescription(sdpOffer)
                         .then(() => {
                             this.connection
-                                ?.createAnswer({
-                                    //mandatory: {
-                                    //offerToReceiveAudio: true,
-                                    //offerToReceiveVideo: true,
-                                    //VoiceActivityDetection: true,
-                                    // },
-                                })
-                                .then((sdpAnswer: RTCSessionDescriptionInit) => {
+                                ?.createAnswer //{
+                                //mandatory: {
+                                //offerToReceiveAudio: true,
+                                //offerToReceiveVideo: true,
+                                //VoiceActivityDetection: true,
+                                // },
+                                //}
+                                ()
+                                .then((sdpAnswer: WebRTC.RTCSessionDescription) => {
                                     this.connection
                                         ?.setLocalDescription(sdpAnswer)
                                         .then(() => {
@@ -284,7 +288,8 @@ export class WebRTCController {
                             reject(error);
                         });
 
-                    this.connection.addEventListener('track', (event) => {
+                    /*
+                    this.connection.addEventListener('track', (event: any) => {
                         this.eventListeners
                             .get(WebRTCEventType.REMOTE_STREAM)
                             ?.forEach((listener) => listener({ stream: event.streams[0] }));
@@ -301,6 +306,7 @@ export class WebRTCController {
                     this.connection.addEventListener('negotiationneeded', () => {
                         // console.log('Negotiation needed');
                     });
+                    */
                 })
                 .catch((error: Error) => reject(error));
             //})
@@ -310,7 +316,7 @@ export class WebRTCController {
         });
     }
 
-    public async addAnswer(sdpAnswer: RTCSessionDescription): Promise<void> {
+    public async addAnswer(sdpAnswer: WebRTC.RTCSessionDescription): Promise<void> {
         if (!this.connection) {
             console.warn('Trying to set sdpAnswer for non-existing connection');
             return;
@@ -318,7 +324,7 @@ export class WebRTCController {
         return this.connection.setRemoteDescription(sdpAnswer);
     }
 
-    public async addCandidate(candidate: RTCIceCandidate): Promise<void> {
+    public async addCandidate(candidate: WebRTC.RTCIceCandidate): Promise<void> {
         if (!this.connection) {
             console.warn('Trying to set ICE Candidate for non-existing connection');
             return;

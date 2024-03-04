@@ -1,3 +1,4 @@
+import * as WebRTC from 'react-native-webrtc';
 import { P2PCall, P2PCallStatus, UserPairInfo } from '../models';
 import { SignalingEventType, TransportController } from './transport';
 import { UserController } from './user';
