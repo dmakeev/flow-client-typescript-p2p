@@ -80,6 +80,7 @@ export class WebRTCController {
 
     public setIceServers(iceServers: []): void {
         console.log(iceServers);
+        // this.iceServers = [{ urls: 'stun:139.59.128.234:3452' }]; //iceServers;
         this.iceServers = [{ urls: 'stun:139.59.128.234:3452' }]; //iceServers;
     }
 
@@ -124,14 +125,10 @@ export class WebRTCController {
                     console.log('***************************************************************', this.iceServers);
                     console.log('***************************************************************', this.iceServers);
                     console.log('***************************************************************', this.iceServers);
-                    console.log('***************************************************************', WebRTC.RTCPeerConnection);
+                    console.log('*************************************************************** 2222', WebRTC.RTCPeerConnection);
                     try {
                         this.connection = new WebRTC.RTCPeerConnection({
-                            iceServers: [
-                                {
-                                    urls: ['stun:stun.l.google.com:19302'],
-                                },
-                            ],
+                            iceServers: this.iceServers,
                         });
                     } catch (error: any) {
                         console.log(error);
@@ -229,15 +226,18 @@ export class WebRTCController {
                     console.log('***************************************************************', this.iceServers);
                     console.log('***************************************************************', this.iceServers);
                     console.log('***************************************************************', this.iceServers);
-                    console.log('***************************************************************', WebRTC.RTCPeerConnection);
+                    console.log('*************************************************************** 1111', WebRTC.RTCPeerConnection);
                     try {
                         this.connection = new WebRTC.RTCPeerConnection({
-                            iceServers: [
-                                {
-                                    urls: ['stun:stun.l.google.com:19302'],
-                                },
-                            ],
+                            iceServers: this.iceServers,
                         });
+                        /*
+                        [
+                                {
+                                    urls: 'stun:stun.l.google.com:19302',
+                                },
+                            ]
+                            */
                     } catch (error: any) {
                         console.log(error);
                     }
@@ -257,7 +257,7 @@ export class WebRTCController {
                         }
                         this.eventListeners.get(WebRTCEventType.ON_ICE_CANDIDATE)?.forEach((listener) => {
                             listener({ candidate: event.candidate });
-                        });
+                        }); 
                     });
                     */
 
