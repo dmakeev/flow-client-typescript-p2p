@@ -1,4 +1,3 @@
-import * as WebRTC from 'react-native-webrtc';
 import type { P2PCall, User } from '../models';
 export declare enum SignalingEventType {
     CONNECTED = "connected",
@@ -87,7 +86,7 @@ export declare class TransportController {
      * @param {boolean}               video     If video should be enabled
      * @returns {Promise<string>}               Call ID
      */
-    call(calleeId: string, sdpOffer: WebRTC.RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall>;
+    call(calleeId: string, sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall>;
     /**
      * Accept the call
      *
@@ -97,7 +96,7 @@ export declare class TransportController {
      * @param {boolean}               video     If video should be enabled
      * @returns {Promise<void>}               Call ID
      */
-    accept(callId: string, sdpAnswer: WebRTC.RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall>;
+    accept(callId: string, sdpAnswer: RTCSessionDescription, audio: boolean, video: boolean): Promise<P2PCall>;
     /**
      * Reject the incoming call
      *
@@ -121,7 +120,7 @@ export declare class TransportController {
      * @param {RTCSessionDescription} sdpOffer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
-    reconnect(callId: string, sdpOffer: WebRTC.RTCSessionDescription): Promise<void>;
+    reconnect(callId: string, sdpOffer: RTCSessionDescription): Promise<void>;
     /**
      * Accept the reconnection request
      *
@@ -129,13 +128,13 @@ export declare class TransportController {
      * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
-    acceptReconnect(callId: string, sdpAnswer: WebRTC.RTCSessionDescription): Promise<void>;
+    acceptReconnect(callId: string, sdpAnswer: RTCSessionDescription): Promise<void>;
     /**
      * Send ICE candidate to another user
      *
      * @param {string}                callId  User ID to call to
-     * @param {RTCIceCandidate} sdpAnswer  Any security token, used by the backend to authorize user
+     * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
-    sendIceCandidate(callId: string, candidate: WebRTC.RTCIceCandidate): Promise<void>;
+    sendIceCandidate(callId: string, candidate: RTCIceCandidate): Promise<void>;
 }

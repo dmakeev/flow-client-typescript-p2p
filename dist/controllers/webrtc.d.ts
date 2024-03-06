@@ -1,4 +1,3 @@
-import * as WebRTC from 'react-native-webrtc';
 export declare function injectWebRTC(WebRTCWrapper: any): void;
 export declare enum WebRTCEventType {
     REMOTE_STREAM = "remote_stream",
@@ -20,9 +19,9 @@ export declare class WebRTCController {
     removeEventListener(type: WebRTCEventType, listener: WebRTCEvent): void;
     setIceServers(iceServers: []): void;
     callStarted(): void;
-    initConnection(audio: boolean, video: boolean): Promise<WebRTC.RTCSessionDescription>;
-    initConnectionAnswering(sdpOffer: WebRTC.RTCSessionDescription, audio: boolean, video: boolean): Promise<WebRTC.RTCSessionDescription>;
-    addAnswer(sdpAnswer: WebRTC.RTCSessionDescription): Promise<void>;
-    addCandidate(candidate: WebRTC.RTCIceCandidate): Promise<void>;
+    initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription>;
+    initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription>;
+    addAnswer(sdpAnswer: RTCSessionDescription): Promise<void>;
+    addCandidate(candidate: RTCIceCandidate): Promise<void>;
     closeConnection(): void;
 }

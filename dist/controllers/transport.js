@@ -1,5 +1,4 @@
 import { io, Socket } from 'socket.io-client';
-import * as WebRTC from 'react-native-webrtc';
 import { LogController } from './log';
 export var SignalingEventType;
 (function (SignalingEventType) {
@@ -404,7 +403,7 @@ export class TransportController {
      * Send ICE candidate to another user
      *
      * @param {string}                callId  User ID to call to
-     * @param {RTCIceCandidate} sdpAnswer  Any security token, used by the backend to authorize user
+     * @param {RTCSessionDescription} sdpAnswer  Any security token, used by the backend to authorize user
      * @returns {Promise<void>}
      */
     async sendIceCandidate(callId, candidate) {

@@ -1,4 +1,4 @@
-import * as WebRTC from 'react-native-webrtc';
+//import * as WebRTC from 'react-native-webrtc';
 import { P2PCall, P2PCallStatus, UserPairInfo, type User } from '../models';
 import { SignalingEventType, TransportController } from './transport';
 import { UserController } from './user';
@@ -19,7 +19,7 @@ export type P2PCallEvent = (data?: any) => void;
 
 type IncomingCall = {
     call: P2PCall;
-    sdpOffer: WebRTC.RTCSessionDescription;
+    sdpOffer: RTCSessionDescription;
 };
 
 export class P2PCallController {
@@ -84,7 +84,7 @@ export class P2PCallController {
             this.eventListeners.get(P2PCallEventType.PAIRING_CANCELLED)?.forEach((listener) => listener(data));
         });
         // New incoming call
-        this.transport.addEventListener(SignalingEventType.INCOMING, (data: { call: P2PCall; sdpOffer: WebRTC.RTCSessionDescription }) => {
+        this.transport.addEventListener(SignalingEventType.INCOMING, (data: { call: P2PCall; sdpOffer: RTCSessionDescription }) => {
             this.incomingCalls.set(data.call.id, data);
             this.eventListeners.get(P2PCallEventType.INCOMING)?.forEach((listener) => listener({ call: data.call }));
         });
@@ -103,12 +103,12 @@ export class P2PCallController {
             this.eventListeners.get(P2PCallEventType.REMOTE_STREAM)?.forEach((listener) => listener(data));
         });
         // Your outgoing call was accepted
-        this.transport.addEventListener(SignalingEventType.ACCEPTED, (data: { call: P2PCall; sdpAnswer: WebRTC.RTCSessionDescription }) => {
+        this.transport.addEventListener(SignalingEventType.ACCEPTED, (data: { call: P2PCall; sdpAnswer: RTCSessionDescription }) => {
             this.webrtcController.callStarted();
             this.webrtcController.addAnswer(data.sdpAnswer);
         });
         // Incoming ICE candidate
-        this.transport.addEventListener(SignalingEventType.INCOMING_ICE, (data: { callId: string; candidate: WebRTC.RTCIceCandidate }) => {
+        this.transport.addEventListener(SignalingEventType.INCOMING_ICE, (data: { callId: string; candidate: RTCIceCandidate }) => {
             if (data.callId === this.call?.id) {
                 this.webrtcController.addCandidate(data.candidate);
             } else {
@@ -116,7 +116,7 @@ export class P2PCallController {
             }
         });
         // New local ICE candidate was generated
-        this.webrtcController.addEventListener(WebRTCEventType.ON_ICE_CANDIDATE, (data: { candidate: WebRTC.RTCIceCandidate }) => {
+        this.webrtcController.addEventListener(WebRTCEventType.ON_ICE_CANDIDATE, (data: { candidate: RTCIceCandidate }) => {
             if (!this.call) {
                 return;
             }
@@ -127,18 +127,6 @@ export class P2PCallController {
     }
 
     public addEventListener(type: P2PCallEventType, listener: P2PCallEvent): void {
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ' + type);
         this.eventListeners.get(type)?.add(listener);
     }
 
