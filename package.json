@@ -29,7 +29,7 @@
     },
     "homepage": "https://github.com/dmakeev/react-native-flow-p2p#readme",
     "publishConfig": {
-        "registry": "https://registry.npmjs.org/"
+        "dmakeev:registry": "https://npm.pkg.github.com"
     },
     "dependencies": {
         "@types/webrtc": "^0.0.42",
