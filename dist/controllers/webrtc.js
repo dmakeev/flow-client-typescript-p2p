@@ -96,7 +96,10 @@ export class WebRTCController {
                         // if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
                         if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
                             console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
-                            sender.replaceTrack(newVideoTrack);
+                            sender
+                                .replaceTrack(newVideoTrack)
+                                .then((a) => console.log(a))
+                                .catch((error) => console.log(error));
                         }
                         // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
                         if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
