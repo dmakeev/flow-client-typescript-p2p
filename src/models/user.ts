@@ -7,7 +7,7 @@ export enum UserStatus {
 
 export class User {
     // public id?: string;
-    // public userIdentity: string;
+    public userIdentity: string;
     // public email?: string;
     // public name?: string;
     // public surname?: string;
@@ -18,5 +18,7 @@ export class User {
     public avatar?: string;
     public status?: UserStatus;
 
-    constructor(public readonly id: string, public readonly userIdentity: string) {}
+    constructor(public readonly id: string) {
+        this.userIdentity = this.id;
+    }
 }
