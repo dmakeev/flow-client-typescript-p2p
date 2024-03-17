@@ -98,8 +98,13 @@ export class WebRTCController {
                             console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
                             sender
                                 .replaceTrack(newVideoTrack)
-                                .then((a) => console.log(a))
-                                .catch((error) => console.log(error));
+                                .then((a) => {
+                                console.log('111', a);
+                                newVideoTrack.enabled = false;
+                                newVideoTrack.enabled = true;
+                                this.connection?.restartIce();
+                            })
+                                .catch((error) => console.log('222', error));
                         }
                         // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
                         if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
