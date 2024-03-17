@@ -108,7 +108,7 @@ export class WebRTCController {
                         const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                         this.connection?.getSenders().forEach((sender: RTCRtpSender) => {
                             console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
-                            if ((!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id, newVideoTrack)) {
+                            if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
                                 console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
                                 sender.replaceTrack(newVideoTrack);
                             }
