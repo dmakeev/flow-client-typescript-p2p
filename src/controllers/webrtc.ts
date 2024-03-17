@@ -108,7 +108,7 @@ export class WebRTCController {
                         const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                         this.connection?.getSenders().forEach((sender: RTCRtpSender) => {
                             console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1');
-                            if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
+                            if ((!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id, newVideoTrack)) {
                                 console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2');
                                 sender.replaceTrack(newVideoTrack);
                             }
@@ -116,6 +116,7 @@ export class WebRTCController {
                                 console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3');
                                 sender.replaceTrack(newAudioTrack);
                             }
+                            sender.setStreams(stream);
                         });
                         this.localStream = stream;
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
