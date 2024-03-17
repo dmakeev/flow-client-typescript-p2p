@@ -7,9 +7,8 @@ export var UserStatus;
 })(UserStatus || (UserStatus = {}));
 export class User {
     id;
-    userIdentity;
     // public id?: string;
-    // public userIdentity: string;
+    userIdentity;
     // public email?: string;
     // public name?: string;
     // public surname?: string;
@@ -19,9 +18,9 @@ export class User {
     surname;
     avatar;
     status;
-    constructor(id, userIdentity) {
+    constructor(id) {
         this.id = id;
-        this.userIdentity = userIdentity;
+        this.userIdentity = this.id;
     }
 }
 //# sourceMappingURL=user.js.map
