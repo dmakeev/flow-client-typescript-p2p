@@ -92,16 +92,15 @@ export class WebRTCController {
                     const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                     const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                     this.connection?.getSenders().forEach((sender) => {
-                        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1');
+                        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
                         if ((!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id, newVideoTrack)) {
-                            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2');
+                            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
                             sender.replaceTrack(newVideoTrack);
                         }
                         if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
-                            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3');
+                            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
                             sender.replaceTrack(newAudioTrack);
                         }
-                        sender.setStreams(stream);
                     });
                     this.localStream = stream;
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
