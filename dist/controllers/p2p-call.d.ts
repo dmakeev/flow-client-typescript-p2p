@@ -99,6 +99,7 @@ export declare class P2PCallController {
      * @returns {Promise<void>}
      */
     rejectPair(pairId: string, hangupReason?: string): Promise<void>;
+    getVideoDevices(): Promise<MediaDeviceInfo[]>;
     /**
      * Start a new call
      *

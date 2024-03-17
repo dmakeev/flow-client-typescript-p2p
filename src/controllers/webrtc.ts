@@ -80,6 +80,19 @@ export class WebRTCController {
         this.outgoingIceCandidates.length = 0;
     }
 
+    public async getVideoDevices(): Promise<MediaDeviceInfo[]> {
+        return new Promise((resolve: (devices: MediaDeviceInfo[]) => void, reject: (error: Error) => void) => {
+            WebRTC.mediaDevices
+                .enumerateDevices()
+                .then((list: MediaDeviceInfo[]) => {
+                    list.forEach((item) => console.log(item));
+                    const videoDevices = list.filter((item: MediaDeviceInfo) => item.kind === 'videoinput');
+                    resolve(videoDevices);
+                })
+                .catch((error: Error) => reject(error));
+        });
+    }
+
     public async initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription> {
         this.outgoingIceCandidates.length = 0;
         return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {

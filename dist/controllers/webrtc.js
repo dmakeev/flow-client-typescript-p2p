@@ -68,6 +68,18 @@ export class WebRTCController {
         });
         this.outgoingIceCandidates.length = 0;
     }
+    async getVideoDevices() {
+        return new Promise((resolve, reject) => {
+            WebRTC.mediaDevices
+                .enumerateDevices()
+                .then((list) => {
+                list.forEach((item) => console.log(item));
+                const videoDevices = list.filter((item) => item.kind === 'videoinput');
+                resolve(videoDevices);
+            })
+                .catch((error) => reject(error));
+        });
+    }
     async initConnection(audio, video) {
         this.outgoingIceCandidates.length = 0;
         return new Promise((resolve, reject) => {

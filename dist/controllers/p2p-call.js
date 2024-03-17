@@ -108,15 +108,8 @@ export class P2PCallController {
             }
             this.transport.sendIceCandidate(this.call.id, data.candidate);
         });
-        // this.incomingCalls.delete(callId);
     }
     addEventListener(type, listener) {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' + type);
         this.eventListeners.get(type)?.add(listener);
     }
     removeEventListener(type, listener) {
@@ -225,6 +218,9 @@ export class P2PCallController {
                 .then(() => resolve())
                 .catch((error) => reject(error));
         });
+    }
+    async getVideoDevices() {
+        return this.webrtcController.getVideoDevices();
     }
     /**
      * Start a new call
