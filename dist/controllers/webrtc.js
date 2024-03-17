@@ -93,11 +93,13 @@ export class WebRTCController {
                     const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                     this.connection?.getSenders().forEach((sender) => {
                         console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
-                        if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
+                        // if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
+                        if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
                             console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
                             sender.replaceTrack(newVideoTrack);
                         }
-                        if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
+                        // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
+                        if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
                             console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
                             sender.replaceTrack(newAudioTrack);
                         }
