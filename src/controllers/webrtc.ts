@@ -36,8 +36,9 @@ export class WebRTCController {
     private localStream?: MediaStream;
     // private incomingIceCandidates: RTCIceCandidate[] = [];
     private outgoingIceCandidates: RTCIceCandidate[] = [];
-    //private videoStream?: MediaStream;
-    private mediaConstraints = {
+    private mediaConstraints: {
+        [key: string]: boolean | MediaTrackConstraints;
+    } = {
         audio: true,
         video: true,
         //{
@@ -93,6 +94,22 @@ export class WebRTCController {
         });
     }
 
+    public async setVideoDevice(deviceId?: string): Promise<void> {
+        return new Promise((resolve: () => void, reject: (error: Error) => void) => {
+            this.mediaConstraints.video = !!deviceId ? { deviceId } : true;
+            if (!!this.localStream) {
+                WebRTC.mediaDevices
+                    .getUserMedia({ video: this.mediaConstraints.video })
+                    .then((stream: MediaStream) => {
+                        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++', stream.id);
+                        resolve();
+                    })
+                    .catch((error: Error) => reject(error));
+            }
+        });
+        // com.apple.avfoundation.avcapturedevice.built-in_video:1
+    }
+
     public async initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription> {
         this.outgoingIceCandidates.length = 0;
         return new Promise((resolve: (sdpAnswer: RTCSessionDescription) => void, reject: (error: Error) => void) => {
@@ -111,6 +128,7 @@ export class WebRTCController {
                 .then((stream: MediaStream) => {
                     this.localStream = stream;
                     setTimeout(() => {
+                        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', stream.id);
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
                             // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
                             // listener({ stream: this.videoStream });

@@ -20,6 +20,7 @@ export declare class WebRTCController {
     setIceServers(iceServers: []): void;
     callStarted(): void;
     getVideoDevices(): Promise<MediaDeviceInfo[]>;
+    setVideoDevice(deviceId?: string): Promise<void>;
     initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     addAnswer(sdpAnswer: RTCSessionDescription): Promise<void>;

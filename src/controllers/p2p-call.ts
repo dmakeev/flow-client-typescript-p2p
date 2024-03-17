@@ -244,8 +244,23 @@ export class P2PCallController {
         });
     }
 
+    /**
+     * Set video device
+     *
+     * @returns {Promise<MediaDeviceInfo[]>}
+     */
     public async getVideoDevices(): Promise<MediaDeviceInfo[]> {
         return this.webrtcController.getVideoDevices();
+    }
+
+    /**
+     * Set video device
+     *
+     * @param {string} deviceId
+     * @returns {Promise<void>}
+     */
+    public async setVideoDevice(deviceId: string): Promise<void> {
+        return this.webrtcController.setVideoDevice(deviceId);
     }
 
     /**

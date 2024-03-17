@@ -219,8 +219,22 @@ export class P2PCallController {
                 .catch((error) => reject(error));
         });
     }
+    /**
+     * Set video device
+     *
+     * @returns {Promise<MediaDeviceInfo[]>}
+     */
     async getVideoDevices() {
         return this.webrtcController.getVideoDevices();
+    }
+    /**
+     * Set video device
+     *
+     * @param {string} deviceId
+     * @returns {Promise<void>}
+     */
+    async setVideoDevice(deviceId) {
+        return this.webrtcController.setVideoDevice(deviceId);
     }
     /**
      * Start a new call

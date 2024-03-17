@@ -31,7 +31,6 @@ export class WebRTCController {
     localStream;
     // private incomingIceCandidates: RTCIceCandidate[] = [];
     outgoingIceCandidates = [];
-    //private videoStream?: MediaStream;
     mediaConstraints = {
         audio: true,
         video: true,
@@ -80,6 +79,21 @@ export class WebRTCController {
                 .catch((error) => reject(error));
         });
     }
+    async setVideoDevice(deviceId) {
+        return new Promise((resolve, reject) => {
+            this.mediaConstraints.video = !!deviceId ? { deviceId } : true;
+            if (!!this.localStream) {
+                WebRTC.mediaDevices
+                    .getUserMedia({ video: this.mediaConstraints.video })
+                    .then((stream) => {
+                    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++', stream.id);
+                    resolve();
+                })
+                    .catch((error) => reject(error));
+            }
+        });
+        // com.apple.avfoundation.avcapturedevice.built-in_video:1
+    }
     async initConnection(audio, video) {
         this.outgoingIceCandidates.length = 0;
         return new Promise((resolve, reject) => {
@@ -98,6 +112,7 @@ export class WebRTCController {
                 .then((stream) => {
                 this.localStream = stream;
                 setTimeout(() => {
+                    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', stream.id);
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
                         // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
                         // listener({ stream: this.videoStream });
