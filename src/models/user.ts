@@ -7,7 +7,7 @@ export enum UserStatus {
 
 export class User {
     // public id?: string;
-    public userIdentity: string;
+    public userIdentity?: string;
     // public email?: string;
     // public name?: string;
     // public surname?: string;
