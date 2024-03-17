@@ -84,9 +84,24 @@ export class WebRTCController {
             this.mediaConstraints.video = !!deviceId ? { deviceId } : true;
             if (!!this.localStream) {
                 WebRTC.mediaDevices
-                    .getUserMedia({ video: this.mediaConstraints.video })
+                    .getUserMedia(this.mediaConstraints)
                     .then((stream) => {
                     console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++', stream.id);
+                    const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
+                    const newVideoTrack = stream.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
+                    const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
+                    const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
+                    this.connection?.getSenders().forEach((sender) => {
+                        if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
+                            sender.replaceTrack(newVideoTrack);
+                        }
+                        if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
+                            sender.replaceTrack(newAudioTrack);
+                        }
+                    });
+                    this.localStream = stream;
+                    currentVideoTrack?.stop();
+                    newAudioTrack?.stop();
                     resolve();
                 })
                     .catch((error) => reject(error));
