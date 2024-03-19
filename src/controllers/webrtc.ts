@@ -104,9 +104,13 @@ export class WebRTCController {
                         console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++', stream.id);
                         const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
                         const newVideoTrack = stream.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
-                        const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
+                        //const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                         const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                         // this.connection?.getSenders().forEach(async (sender: RTCRtpSender) => {
+                        //this.localStream?.getTracks().forEach((track) => this.localStream?.removeTrack(track));
+                        //this.localStream?.addTrack(newVideoTrack);
+                        //this.localStream?.addTrack(newAudioTrack);
+                        //this.connection?.removeTrack(currentVideoTrack);
                         if (!!this.connection) {
                             for (let sender of this.connection.getSenders()) {
                                 console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
@@ -116,17 +120,19 @@ export class WebRTCController {
                                     sender
                                         .replaceTrack(newVideoTrack)
                                         .then((a) => {
+                                            // this.connection?.removeTrack(currentVideoTrack);
                                             console.log('1111', a);
                                             newVideoTrack.enabled = false;
                                             newVideoTrack.enabled = true;
                                             // this.connection?.restartIce();
                                             //localStream;
-                                            this.localStream = stream;
+                                            //this.localStream = stream;
                                             // this.connection?.
                                         })
                                         .catch((error: Error) => console.log('2221', error));
                                 }
                                 // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
+                                /*
                                 if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
                                     console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
                                     sender
@@ -136,6 +142,7 @@ export class WebRTCController {
                                         })
                                         .catch((error: Error) => console.log('2222', error));
                                 }
+                                */
                             }
                         }
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
