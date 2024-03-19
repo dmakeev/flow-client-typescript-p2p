@@ -113,6 +113,20 @@ export declare class P2PCallController {
      */
     setVideoDevice(deviceId: string): Promise<void>;
     /**
+     * Toggle audio within the call
+     *
+     * @param {boolean | null} forceValue   Force enabled/disabled or just toggle if null value is passed
+     * @returns {boolean}   New value
+     */
+    toggleAudio(forceValue: boolean | null): boolean;
+    /**
+     * Toggle video within the call
+     *
+     * @param {boolean | null} forceValue   Force enabled/disabled or just toggle if null value is passed
+     * @returns {boolean}   New value
+     */
+    toggleVideo(forceValue: boolean | null): boolean;
+    /**
      * Start a new call
      *
      * @param {string}  calleeId  Id of user to call to

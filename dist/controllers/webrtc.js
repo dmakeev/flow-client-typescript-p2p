@@ -85,31 +85,65 @@ export class WebRTCController {
                 WebRTC.mediaDevices
                     .getUserMedia(this.mediaConstraints)
                     .then((stream) => {
-                    const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
-                    const newVideoTrack = stream.getVideoTracks().length ? stream?.getVideoTracks()[0] : null;
                     const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                     const newAudioTrack = stream.getAudioTracks().length ? stream?.getAudioTracks()[0] : null;
+                    const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
+                    const newVideoTrack = stream.getVideoTracks().length ? stream?.getVideoTracks()[0] : null;
                     if (!!this.connection) {
                         for (let sender of this.connection.getSenders()) {
-                            if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
-                                sender.replaceTrack(newVideoTrack);
-                            }
                             if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
                                 sender.replaceTrack(newAudioTrack);
                             }
+                            if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
+                                sender.replaceTrack(newVideoTrack);
+                            }
                         }
                     }
+                    if (!!currentAudioTrack) {
+                        this.localStream?.removeTrack(currentAudioTrack);
+                        currentAudioTrack?.stop();
+                    }
+                    if (!!newAudioTrack) {
+                        this.localStream?.addTrack(newAudioTrack);
+                    }
+                    if (!!currentVideoTrack) {
+                        this.localStream?.removeTrack(currentVideoTrack);
+                        currentVideoTrack?.stop();
+                    }
+                    if (!!newVideoTrack) {
+                        this.localStream?.addTrack(newVideoTrack);
+                    }
+                    stream.getTracks().forEach((track) => stream.removeTrack(track));
+                    stream.stop();
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
-                        listener({ stream });
+                        listener({ stream: this.localStream });
                     });
-                    currentVideoTrack?.stop();
-                    currentAudioTrack?.stop();
                     resolve();
                 })
                     .catch((error) => reject(error));
             }
         });
         // com.apple.avfoundation.avcapturedevice.built-in_video:1
+    }
+    toggleAudio(forceValue) {
+        const track = this.localStream?.getAudioTracks()[0];
+        if (!track) {
+            console.warn('Unable to toggle audio without audio track');
+            return false;
+        }
+        const newValie = forceValue !== null ? forceValue : !track?.enabled;
+        track.enabled = newValie;
+        return newValie;
+    }
+    toggleVideo(forceValue) {
+        const track = this.localStream?.getVideoTracks()[0];
+        if (!track) {
+            console.warn('Unable to toggle audio without audio track');
+            return false;
+        }
+        const newValie = forceValue !== null ? forceValue : !track?.enabled;
+        track.enabled = newValie;
+        return newValie;
     }
     async initConnection(audio, video) {
         this.outgoingIceCandidates.length = 0;

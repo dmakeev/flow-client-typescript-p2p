@@ -237,6 +237,24 @@ export class P2PCallController {
         return this.webrtcController.setVideoDevice(deviceId);
     }
     /**
+     * Toggle audio within the call
+     *
+     * @param {boolean | null} forceValue   Force enabled/disabled or just toggle if null value is passed
+     * @returns {boolean}   New value
+     */
+    toggleAudio(forceValue) {
+        return this.webrtcController.toggleAudio(forceValue);
+    }
+    /**
+     * Toggle video within the call
+     *
+     * @param {boolean | null} forceValue   Force enabled/disabled or just toggle if null value is passed
+     * @returns {boolean}   New value
+     */
+    toggleVideo(forceValue) {
+        return this.webrtcController.toggleVideo(forceValue);
+    }
+    /**
      * Start a new call
      *
      * @param {string}  calleeId  Id of user to call to
