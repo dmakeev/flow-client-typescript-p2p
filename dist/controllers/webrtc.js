@@ -72,7 +72,6 @@ export class WebRTCController {
             WebRTC.mediaDevices
                 .enumerateDevices()
                 .then((list) => {
-                list.forEach((item) => console.log(item));
                 const videoDevices = list.filter((item) => item.kind === 'videoinput');
                 resolve(videoDevices);
             })
@@ -86,55 +85,25 @@ export class WebRTCController {
                 WebRTC.mediaDevices
                     .getUserMedia(this.mediaConstraints)
                     .then((stream) => {
-                    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++', stream.id);
                     const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
                     const newVideoTrack = stream.getVideoTracks().length ? stream?.getVideoTracks()[0] : null;
                     const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                     const newAudioTrack = stream.getAudioTracks().length ? stream?.getAudioTracks()[0] : null;
-                    // this.connection?.getSenders().forEach(async (sender: RTCRtpSender) => {
-                    //this.localStream?.getTracks().forEach((track) => this.localStream?.removeTrack(track));
-                    //this.localStream?.addTrack(newVideoTrack);
-                    //this.localStream?.addTrack(newAudioTrack);
-                    //this.connection?.removeTrack(currentVideoTrack);
                     if (!!this.connection) {
                         for (let sender of this.connection.getSenders()) {
-                            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
-                            // if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
                             if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
-                                console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
-                                sender
-                                    .replaceTrack(newVideoTrack)
-                                    .then((a) => {
-                                    // this.connection?.removeTrack(currentVideoTrack);
-                                    console.log('1111', a);
-                                    newVideoTrack.enabled = false;
-                                    newVideoTrack.enabled = true;
-                                    // this.connection?.restartIce();
-                                    //localStream;
-                                    //this.localStream = stream;
-                                    // this.connection?.
-                                })
-                                    .catch((error) => console.log('2221', error));
+                                sender.replaceTrack(newVideoTrack);
                             }
-                            // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
                             if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
-                                console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
-                                sender
-                                    .replaceTrack(newAudioTrack)
-                                    .then((a) => {
-                                    console.log('1112', a);
-                                })
-                                    .catch((error) => console.log('2222', error));
+                                sender.replaceTrack(newAudioTrack);
                             }
                         }
                     }
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
-                        // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
-                        // listener({ stream: this.videoStream });
                         listener({ stream });
                     });
                     currentVideoTrack?.stop();
-                    newAudioTrack?.stop();
+                    currentAudioTrack?.stop();
                     resolve();
                 })
                     .catch((error) => reject(error));
@@ -160,7 +129,6 @@ export class WebRTCController {
                 .then((stream) => {
                 this.localStream = stream;
                 setTimeout(() => {
-                    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', stream.id);
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
                         // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
                         // listener({ stream: this.videoStream });
@@ -204,7 +172,7 @@ export class WebRTCController {
                 // VoiceActivityDetection: true,
                 })
                     .then((sdpOffer) => {
-                    console.log('Setting local description - offer', sdpOffer.sdp);
+                    // console.log('Setting local description - offer', sdpOffer.sdp);
                     this.connection
                         ?.setLocalDescription(sdpOffer)
                         .then(() => {
@@ -271,7 +239,7 @@ export class WebRTCController {
                         listener({ candidate: event.candidate });
                     });
                 });
-                console.log('Setting remote description', sdpOffer.sdp);
+                // console.log('Setting remote description', sdpOffer.sdp);
                 this.connection
                     .setRemoteDescription(sdpOffer)
                     .then(() => {
@@ -284,7 +252,7 @@ export class WebRTCController {
                     // },
                     })
                         .then((sdpAnswer) => {
-                        console.log('Setting local description - answer', sdpAnswer.sdp);
+                        // console.log('Setting local description - answer', sdpAnswer.sdp);
                         this.connection
                             ?.setLocalDescription(sdpAnswer)
                             .then(() => {
@@ -325,7 +293,7 @@ export class WebRTCController {
             console.warn('Trying to set sdpAnswer for non-existing connection');
             return;
         }
-        console.log('Setting remote description - answer', sdpAnswer.sdp);
+        // console.log('Setting remote description - answer', sdpAnswer.sdp);
         return this.connection.setRemoteDescription(sdpAnswer);
     }
     async addCandidate(candidate) {
