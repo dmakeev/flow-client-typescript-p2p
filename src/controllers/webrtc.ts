@@ -106,29 +106,38 @@ export class WebRTCController {
                         const newVideoTrack = stream.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
                         const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
                         const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
-                        this.connection?.getSenders().forEach((sender: RTCRtpSender) => {
-                            console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
-                            // if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
-                            if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
-                                console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
-                                sender
-                                    .replaceTrack(newVideoTrack)
-                                    .then((a) => {
-                                        console.log('111', a);
-                                        newVideoTrack.enabled = false;
-                                        newVideoTrack.enabled = true;
-                                        this.connection?.restartIce();
-                                        // this.connection?.
-                                    })
-                                    .catch((error: Error) => console.log('222', error));
+                        // this.connection?.getSenders().forEach(async (sender: RTCRtpSender) => {
+                        if (!!this.connection) {
+                            for (let sender of this.connection.getSenders()) {
+                                console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  1', sender);
+                                // if (!!currentVideoTrack && !!newVideoTrack && sender.track?.id === currentVideoTrack.id) {
+                                if (!!currentVideoTrack && !!newVideoTrack && sender.track?.kind === 'video') {
+                                    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  2', newVideoTrack);
+                                    sender
+                                        .replaceTrack(newVideoTrack)
+                                        .then((a) => {
+                                            console.log('1111', a);
+                                            newVideoTrack.enabled = false;
+                                            newVideoTrack.enabled = true;
+                                            // this.connection?.restartIce();
+                                            //localStream;
+                                            this.localStream = stream;
+                                            // this.connection?.
+                                        })
+                                        .catch((error: Error) => console.log('2221', error));
+                                }
+                                // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
+                                if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
+                                    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
+                                    sender
+                                        .replaceTrack(newAudioTrack)
+                                        .then((a) => {
+                                            console.log('1112', a);
+                                        })
+                                        .catch((error: Error) => console.log('2222', error));
+                                }
                             }
-                            // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
-                            if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
-                                console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
-                                sender.replaceTrack(newAudioTrack);
-                            }
-                        });
-                        this.localStream = stream;
+                        }
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
                             // this.videoStream = new WebRTC.MediaStream(this.localStream?.getVideoTracks());
                             // listener({ stream: this.videoStream });
