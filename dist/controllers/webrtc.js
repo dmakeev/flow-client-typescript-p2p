@@ -131,7 +131,7 @@ export class WebRTCController {
             console.warn('Unable to toggle audio without audio track');
             return false;
         }
-        const newValie = forceValue !== null ? forceValue : !track?.enabled;
+        const newValie = forceValue !== undefined ? forceValue : !track?.enabled;
         track.enabled = newValie;
         return newValie;
     }
@@ -141,7 +141,7 @@ export class WebRTCController {
             console.warn('Unable to toggle audio without audio track');
             return false;
         }
-        const newValie = forceValue !== null ? forceValue : !track?.enabled;
+        const newValie = forceValue !== undefined ? forceValue : !track?.enabled;
         track.enabled = newValie;
         return newValie;
     }

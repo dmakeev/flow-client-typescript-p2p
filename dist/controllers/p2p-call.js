@@ -239,7 +239,7 @@ export class P2PCallController {
     /**
      * Toggle audio within the call
      *
-     * @param {boolean | null} forceValue   Force enabled/disabled or just toggle if null value is passed
+     * @param {boolean?} forceValue   Force enabled/disabled or just toggle if null value is passed
      * @returns {boolean}   New value
      */
     toggleAudio(forceValue) {
@@ -248,7 +248,7 @@ export class P2PCallController {
     /**
      * Toggle video within the call
      *
-     * @param {boolean | null} forceValue   Force enabled/disabled or just toggle if null value is passed
+     * @param {boolean?} forceValue   Force enabled/disabled or just toggle if null value is passed
      * @returns {boolean}   New value
      */
     toggleVideo(forceValue) {

@@ -141,24 +141,24 @@ export class WebRTCController {
         // com.apple.avfoundation.avcapturedevice.built-in_video:1
     }
 
-    public toggleAudio(forceValue: boolean | null): boolean {
+    public toggleAudio(forceValue?: boolean): boolean {
         const track = this.localStream?.getAudioTracks()[0];
         if (!track) {
             console.warn('Unable to toggle audio without audio track');
             return false;
         }
-        const newValie = forceValue !== null ? forceValue : !track?.enabled;
+        const newValie = forceValue !== undefined ? forceValue : !track?.enabled;
         track!.enabled = newValie;
         return newValie;
     }
 
-    public toggleVideo(forceValue: boolean | null): boolean {
+    public toggleVideo(forceValue?: boolean): boolean {
         const track = this.localStream?.getVideoTracks()[0];
         if (!track) {
             console.warn('Unable to toggle audio without audio track');
             return false;
         }
-        const newValie = forceValue !== null ? forceValue : !track?.enabled;
+        const newValie = forceValue !== undefined ? forceValue : !track?.enabled;
         track!.enabled = newValie;
         return newValie;
     }

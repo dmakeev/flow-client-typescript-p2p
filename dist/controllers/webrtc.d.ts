@@ -21,8 +21,8 @@ export declare class WebRTCController {
     callStarted(): void;
     getVideoDevices(): Promise<MediaDeviceInfo[]>;
     setVideoDevice(deviceId?: string): Promise<void>;
-    toggleAudio(forceValue: boolean | null): boolean;
-    toggleVideo(forceValue: boolean | null): boolean;
+    toggleAudio(forceValue?: boolean): boolean;
+    toggleVideo(forceValue?: boolean): boolean;
     initConnection(audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     initConnectionAnswering(sdpOffer: RTCSessionDescription, audio: boolean, video: boolean): Promise<RTCSessionDescription>;
     addAnswer(sdpAnswer: RTCSessionDescription): Promise<void>;
