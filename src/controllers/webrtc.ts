@@ -106,11 +106,9 @@ export class WebRTCController {
                         const newVideoTrack = stream.getVideoTracks().length ? stream?.getVideoTracks()[0] : null;
                         if (!!newAudioTrack) {
                             newAudioTrack!.enabled = currentAudioTrack?.enabled ?? false;
-                            console.log('!!!!!! A', newAudioTrack!.enabled);
                         }
                         if (!!newVideoTrack) {
                             newVideoTrack!.enabled = currentVideoTrack?.enabled ?? false;
-                            console.log('!!!!!! B', newAudioTrack!.enabled);
                         }
                         if (!!this.connection) {
                             for (let sender of this.connection.getSenders()) {
