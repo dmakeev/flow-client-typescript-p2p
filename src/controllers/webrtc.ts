@@ -104,6 +104,12 @@ export class WebRTCController {
                         const newAudioTrack = stream.getAudioTracks().length ? stream?.getAudioTracks()[0] : null;
                         const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
                         const newVideoTrack = stream.getVideoTracks().length ? stream?.getVideoTracks()[0] : null;
+                        if (!!newAudioTrack) {
+                            newAudioTrack!.enabled = currentAudioTrack?.enabled ?? false;
+                        }
+                        if (!!newVideoTrack) {
+                            newVideoTrack!.enabled = currentVideoTrack?.enabled ?? false;
+                        }
                         if (!!this.connection) {
                             for (let sender of this.connection.getSenders()) {
                                 if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
