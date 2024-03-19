@@ -103,6 +103,7 @@ export class WebRTCController {
                                 newVideoTrack.enabled = false;
                                 newVideoTrack.enabled = true;
                                 this.connection?.restartIce();
+                                // this.connection?.
                             })
                                 .catch((error) => console.log('222', error));
                         }
