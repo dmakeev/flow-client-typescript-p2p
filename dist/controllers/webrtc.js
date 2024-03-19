@@ -88,9 +88,9 @@ export class WebRTCController {
                     .then((stream) => {
                     console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++', stream.id);
                     const currentVideoTrack = this.localStream?.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
-                    const newVideoTrack = stream.getVideoTracks().length ? this.localStream?.getVideoTracks()[0] : null;
-                    //const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
-                    const newAudioTrack = stream.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
+                    const newVideoTrack = stream.getVideoTracks().length ? stream?.getVideoTracks()[0] : null;
+                    const currentAudioTrack = this.localStream?.getAudioTracks().length ? this.localStream?.getAudioTracks()[0] : null;
+                    const newAudioTrack = stream.getAudioTracks().length ? stream?.getAudioTracks()[0] : null;
                     // this.connection?.getSenders().forEach(async (sender: RTCRtpSender) => {
                     //this.localStream?.getTracks().forEach((track) => this.localStream?.removeTrack(track));
                     //this.localStream?.addTrack(newVideoTrack);
@@ -117,17 +117,15 @@ export class WebRTCController {
                                     .catch((error) => console.log('2221', error));
                             }
                             // if (!!currentAudioTrack && !!newAudioTrack && sender.track?.id === currentAudioTrack.id) {
-                            /*
                             if (!!currentAudioTrack && !!newAudioTrack && sender.track?.kind === 'audio') {
                                 console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ +++  3', newAudioTrack);
                                 sender
                                     .replaceTrack(newAudioTrack)
                                     .then((a) => {
-                                        console.log('1112', a);
-                                    })
-                                    .catch((error: Error) => console.log('2222', error));
+                                    console.log('1112', a);
+                                })
+                                    .catch((error) => console.log('2222', error));
                             }
-                            */
                         }
                     }
                     this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
