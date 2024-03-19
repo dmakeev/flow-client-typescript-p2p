@@ -128,10 +128,11 @@ export class WebRTCController {
                         if (!!newVideoTrack) {
                             this.localStream?.addTrack(newVideoTrack);
                         }
-                        stream.getTracks().forEach((track) => stream.removeTrack(track));
-                        stream.stop();
+                        //stream.getTracks().forEach((track) => stream.removeTrack(track));
+                        //stream.stop();
                         this.eventListeners.get(WebRTCEventType.LOCAL_STREAM)?.forEach((listener) => {
-                            listener({ stream: this.localStream });
+                            // listener({ stream: this.localStream });
+                            listener({ stream });
                         });
                         resolve();
                     })
