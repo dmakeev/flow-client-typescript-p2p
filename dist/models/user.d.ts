@@ -8,8 +8,8 @@ export declare class User {
     readonly id: string;
     userIdentity?: string;
     email?: string;
-    name?: string;
-    surname?: string;
+    firstName?: string;
+    lastName?: string;
     avatar?: string;
     status?: UserStatus;
     constructor(id: string);

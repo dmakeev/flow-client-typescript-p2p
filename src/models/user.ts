@@ -13,8 +13,8 @@ export class User {
     // public surname?: string;
     // public avatar?: string;
     public email?: string;
-    public name?: string;
-    public surname?: string;
+    public firstName?: string;
+    public lastName?: string;
     public avatar?: string;
     public status?: UserStatus;
 

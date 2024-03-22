@@ -14,8 +14,8 @@ export class User {
     // public surname?: string;
     // public avatar?: string;
     email;
-    name;
-    surname;
+    firstName;
+    lastName;
     avatar;
     status;
     constructor(id) {

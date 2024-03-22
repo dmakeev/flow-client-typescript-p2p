@@ -64,9 +64,9 @@ export class P2PCallController {
             this.eventListeners.get(P2PCallEventType.PAIRED)?.forEach((listener) => listener(data));
         });
         // Active pairing was cancelled by another user
-        this.transport.addEventListener(SignalingEventType.PAIRING_CANCELLED, (data) => {
+        this.transport.addEventListener(SignalingEventType.PAIRING_CANCELLED, (pairId) => {
             this.call = undefined;
-            this.eventListeners.get(P2PCallEventType.PAIRING_CANCELLED)?.forEach((listener) => listener(data));
+            this.eventListeners.get(P2PCallEventType.PAIRING_CANCELLED)?.forEach((listener) => listener(pairId));
         });
         // New incoming call
         this.transport.addEventListener(SignalingEventType.INCOMING, (data) => {

@@ -83,8 +83,8 @@ export class TransportController {
                 this.eventListeners.get(SignalingEventType.PAIRED)?.forEach((listener) => listener({ pair: data.pair }));
             });
 
-            this.socket.on('/v1/pairing/cancel', (data: { pair: UserPairInfo }) => {
-                this.eventListeners.get(SignalingEventType.PAIRING_CANCELLED)?.forEach((listener) => listener({ pair: data.pair }));
+            this.socket.on('/v1/pairing/cancel', (data: { pairId: string }) => {
+                this.eventListeners.get(SignalingEventType.PAIRING_CANCELLED)?.forEach((listener) => listener({ pairId: data.pairId }));
             });
 
             this.socket.on('/v1/p2p/incoming', (data: { call: P2PCall; sdpOffer: RTCSessionDescription }) => {
